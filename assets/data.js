@@ -5386,7 +5386,7 @@ window.POSTS = [
   },
   {
     "title": "Can AMD break the CUDA Moat? AMD Advancing AI 2026",
-    "summary": "Up to 105% Equity Rebate Discounts for OpenAI, Agentic Kernel Generation, Improvement in Software Quality, Unstable Internal Development Clusters, Helios MI455X Production Ramp Hell (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 원문은 2025년 초 AMD의 성공 확률을 0%로 봤다가 \"AMD 2.0\" 글에서 0이 아닌 확률로, 이번에는 \"두 가지 위험만 해결하면 큰 성공 가능성\"으로 상향한다고 서술. Anthropic이 AMD 칩 2GW 배치를 공개했고, Microsoft가 MI455X Helios 배치를 발표했다고 서술.\n핵심 팩트: 원문은 MI455X가 2nm(N2) XCD를 쓰는 첫 데이터센터 실리콘이며 5.5× 레티클 CoWoS-L에 로직 3,470 mm², HBM4 12스택(432GB)을 담고, FP8 20 PF(Rubin 17.5)라고 서술. 두 가지 위험은 ① Helios 랙의 느린 양산(케이블 없는 트레이 미적용, 백플레인 85% 리타임 필요, 랙당 Broadcom 리타이머 550개 초과), ② AMD 내부 개발·CI용 안정적 GPU 클러스터 부족.\n영향도: 원문은 소프트웨어가 빠르게 개선(DeepSeek V4, MiniMax M3 Day 0 대응, ATOMesh, MoRI)되지만 경쟁 전선이 단일 노드에서 분리형 추론(PD 분리, WideEP) 구성 요소의 \"조합 가능성\"으로 이동했다고 봄. 에이전트 코딩이 CUDA 해자(소프트웨어 인력 우위)를 약화시킨다고 봄.\n단서: 제목의 \"105% 지분 리베이트\" 서술은 서문에 한 문단뿐이며 구조·근거(Part 3)는 유료 구간에 있음. 이 문서는 투자 판단 자료가 아님.",
     "url": "https://newsletter.semianalysis.com/p/can-amd-break-the-cuda-moat-amd-advancing",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-29T15:00:46.151910+00:00",
@@ -5405,7 +5405,9 @@ window.POSTS = [
       "NVIDIA",
       "AMD",
       "OpenAI"
-    ]
+    ],
+    "feed_summary": "Up to 105% Equity Rebate Discounts for OpenAI, Agentic Kernel Generation, Improvement in Software Quality, Unstable Internal Development Clusters, Helios MI455X Production Ramp Hell (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   },
   {
     "title": "Intel Panther Lake Teardown",
@@ -5898,7 +5900,7 @@ window.POSTS = [
   },
   {
     "title": "Gemini is Cooked but GCP is Cooking",
-    "summary": "구글 제미나이 모델의 경쟁 상황과 구글 클라우드 플랫폼(GCP)의 인프라 성장세를 비교 정리합니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 원문은 2026-08-05 Google이 DeepMind 리더십을 전면 개편(Hassabis 일상 운영에서 이탈, Jeff Dean이 신생 랩 Discovery Loop 설립을 위해 퇴사, Sanjay Ghemawat, Quoc Le, Oriol Vinyals 동반, Koray Kavukcuoglu가 후임)했다고 서술.\n핵심 팩트: 원문은 \"DeepMind는 더 이상 프런티어 랩이 아니다\"라고 판단하고, 최대 수혜자는 Anthropic이나 OpenAI가 아니라 Google Cloud라고 봄. 2Q26 GCP 성장률은 82%이며, TPU 시스템 판매 제외 시 core GCP는 70%대 초반이라고 추정.\n영향도: 원문은 TPU 시스템 판매(백로그 $150B 초과)가 2027년 GCP 성장률을 100%대 중반(컨센서스 64%)으로 끌어올리고 EPS를 약 $3 높인다고 전망.\n단서: 대부분이 SemiAnalysis Tokenomics, Accelerator 모델 기반 추정이며 원문은 \"odds basically zero\" 같은 강한 단정을 사용함.",
     "url": "https://newsletter.semianalysis.com/p/gemini-is-cooked-but-gcp-is-cooking",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -5915,7 +5917,9 @@ window.POSTS = [
     ],
     "entities": [
       "Google"
-    ]
+    ],
+    "feed_summary": "구글 제미나이 모델의 경쟁 상황과 구글 클라우드 플랫폼(GCP)의 인프라 성장세를 비교 정리합니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   },
   {
     "title": "Kimi K3, The Manos, The Mythos, The Legendos",
@@ -5942,7 +5946,7 @@ window.POSTS = [
   },
   {
     "title": "Vera Rubin NVL72 vs GB200 NVL72? Inference TCO & Architecture Analysis",
-    "summary": "Rubin LUT Based Tensor Core, Feynman, Rack Scale, Perf Per MegaWatt, Perf Per Dollar, Software Improvements, Public Rubin Software, PyTorch, vLLM, OpenAI Triton (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 원문은 Vera Rubin NVL72가 Oberon 랙 아키텍처의 2세대이며 극단적 공동 설계로 추론 이득을 얻는다고 서술. 초기 수치는 CoreWeave의 엔지니어링 샘플 측정이며 SemiAnalysis가 독립 검증하지 않았다고 밝힘.\n핵심 팩트: 원문은 DeepSeek R1에서 Rubin이 GB200 NVL72 대비 MW당 성능 5.4배, 달러당 성능 5배라고 소개하나, 본문 분석에서는 5.4배가 GB300의 300 tok/s/user \"마지막 겨우 가능한 점\"에서 나온 비율이라고 해석함. 같은 시점(2026-07) 기준으로는 중간 구간에서 약 4배가 정점.\n영향도: 원문은 Rubin이 Blackwell SM100 커널을 재사용할 수 있어 소프트웨어 이식이 쉽고, 고상호작용(fast mode) 서비스 영역에서 Blackwell보다 훨씬 넓은 영역을 처리한다고 봄.\n단서: Nvidia는 검증 가능한 수치를 InferenceX에 3Q CY2026까지 제출하기로 약속함. 현재 결과는 사전 양산 랙, scale-out 패브릭 없음, 구형 모델(DeepSeek R1), 단일 턴 8k/1k 조건.",
     "url": "https://newsletter.semianalysis.com/p/vera-rubin-nvl72-vs-gb200-nvl72-inference",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -5960,11 +5964,13 @@ window.POSTS = [
     "entities": [
       "NVIDIA",
       "OpenAI"
-    ]
+    ],
+    "feed_summary": "Rubin LUT Based Tensor Core, Feynman, Rack Scale, Perf Per MegaWatt, Perf Per Dollar, Software Improvements, Public Rubin Software, PyTorch, vLLM, OpenAI Triton (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   },
   {
     "title": "Meta’s Infrastructure Team Needs A Culture Reset",
-    "summary": "Meta Infrastructure has become bloated, with middle managers expending resources on over-engineered technology solutions that lose sight of broader organizational needs. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 원문은 Meta Infrastructure가 비대해지고 중간 관리자가 과잉 설계에 자원을 쓰며 정치화되었다고 진단. 6개월 평가 주기에서 하위 10~15%를 잘라 단기 성과 지향과 위험 회피를 낳는다고 봄.\n핵심 팩트: 원문은 Rivos 인수에 $2.5B 초과를 썼고, GPU 서버 설계(Grand Teton, Ariel)에서 표준보다 나쁜 커스터마이징을 해 왔으며, 같은 패턴이 AMD MI450X 커스텀 SKU에서 반복된다고 서술.\n영향도: 원문은 Ariel의 TCO가 표준 GB200 NVL72보다 14% 높았고 \"수십억 달러\"의 손실을 냈다고 봄. MI450X 커스텀은 AMD의 Meta 물량을 위협한다고 경고.\n단서: 다수 서술이 전직·현직 직원 증언에 의존하며, 원문 스스로 일부 수치(Ariel TCO 14%)는 \"our calculations\"로 표시.",
     "url": "https://newsletter.semianalysis.com/p/metas-infrastructure-team-needs-a",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -5981,11 +5987,13 @@ window.POSTS = [
     ],
     "entities": [
       "Meta"
-    ]
+    ],
+    "feed_summary": "Meta Infrastructure has become bloated, with middle managers expending resources on over-engineered technology solutions that lose sight of broader organizational needs. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   },
   {
     "title": "The Future of Meta Superintelligence: A 1 Year Progress Update",
-    "summary": "메타 AI 조직 개편 이후 1년간의 강화학습 및 대규모 컴퓨팅 클러스터 구축 경과를 다룹니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 원문은 Llama 4 실패 이후 1년간 Meta가 AI 조직을 재건했고(Scale AI $14.3B \"투자\"로 Alexandr Wang 영입, 수억~$1B+ 보상, Tent 데이터센터), 4월 Muse Spark로 공개 데뷔했다고 정리.\n핵심 팩트: 원문은 프런티어 모델의 3요소(데이터, 인재, 컴퓨팅)에서 Meta가 세 가지를 모두 세계 수준으로 갖추는 유일한 하이퍼스케일러/neolab이라고 봄. Meta가 직원 화면 추적과 약 3,000명 엔지니어의 상시 RL 태스크 제작 조직을 만들었다고 서술.\n영향도: 원문은 Tokenomics Model 기준 Meta의 AI 컴퓨팅이 올해 말 OpenAI와 Anthropic 각각보다 많아질 것으로 봄(RecSys, 광고 포함). MSL 훈련 몫만 봐도 2026~2027년 비슷한 수준이라고 서술.\n단서: 원문은 Muse Spark 1.1이 Opus 4.6 또는 GLM 5.2 수준이라 평가하며, 낙관 시나리오에서도 Anthropic, OpenAI와의 동급은 올해 말 이후라고 봄.",
     "url": "https://newsletter.semianalysis.com/p/the-future-of-meta-superintelligence",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6003,11 +6011,13 @@ window.POSTS = [
     "entities": [
       "Intel",
       "Meta"
-    ]
+    ],
+    "feed_summary": "메타 AI 조직 개편 이후 1년간의 강화학습 및 대규모 컴퓨팅 클러스터 구축 경과를 다룹니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   },
   {
     "title": "Anthropic 3Q26 Profit Over $1B: The Anthropic IPO Financials Sneak Peak",
-    "summary": "앤트로픽의 2026년 3분기 실적 추정과 IPO 준비 과정에서의 재무 지표를 분석합니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 원문은 Anthropic이 2026-06-01 IPO를 비공개로 신청했다고 서술함. 비공개 신청이므로 공개 수치는 없음.\n핵심 팩트: 원문은 Anthropic과 OpenAI의 ARR 합계가 약 $100B이고, 2026년 Claude Code 확산으로 Anthropic이 B2B 시장에서 수익성 있게 앞서 있다고 봄. 올해 이미 중국 AI 랩 2곳(Zhipu, Minimax)이 IPO했다고 서술함.\n영향도: 원문은 Anthropic이 가격 결정력, 총마진, 사업 모델, 수익성 덕에 먼저 IPO하고 OpenAI가 재무 공개와 자본 조달 압박을 받게 된다고 봄. 기본 시나리오에서 \"첫 $6T 기업\" 가능성을 언급함.\n단서: 수치는 SemiAnalysis Tokenomics 모델이 SKU, 티어, 고객 유형별로 상향식 추정한 값임. 공개된 본문에는 구체 수치가 없음.",
     "url": "https://newsletter.semianalysis.com/p/anthropic-3q26-profit-over-1b-the",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6024,11 +6034,13 @@ window.POSTS = [
     ],
     "entities": [
       "Anthropic"
-    ]
+    ],
+    "feed_summary": "앤트로픽의 2026년 3분기 실적 추정과 IPO 준비 과정에서의 재무 지표를 분석합니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   },
   {
     "title": "Nvidia GPU Debt Backstop Unleashes the AI Project Trinity: Capital, Offtake and Datacenters",
-    "summary": "엔비디아가 네오클라우드 성장을 위해 도입한 GPU 부채 보증 구조의 금융 메커니즘을 설명합니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 원문은 AI 구축이 주로 하이퍼스케일러 현금흐름으로 충당되다가 Oracle, Meta, 이어 Google까지 부채로 이동했다고 서술. 병목이 2025년 데이터센터 용량, 2026년 초 칩 생산을 거쳐 이제 자금 조달이라고 봄.\n핵심 팩트: 원문은 AI 부채가 2029년까지 7T 달러 초과(약 $7.1T)에 이르러 미국 모기지 담보 시장(약 $13T) 다음의 자산담보 시장이 되고, 2024~2029 누적 AI Capex가 약 $11.1T라고 추정. Nvidia가 Neocloud의 GPU 임대 오프테이크를 take-or-pay 최소 매출 보장(백스톱)으로 지원하기 시작했다고 서술.\n영향도: 원문은 백스톱이 대출자에게 Nvidia 신용(AA/Aa2)을 제공해 \"Capital, Offtake, Datacenter\" 삼각(Trinity)을 맞추게 하고, Nvidia의 목표는 시장 접근 확대라고 봄.\n단서: 백스톱 조건은 Neocloud별로 협상되며 원문의 곡선은 \"낮은 쪽\"의 예시. 발표된 거래는 모두 아시아·태평양 지역.",
     "url": "https://newsletter.semianalysis.com/p/nvidia-gpu-debt-backstop-unleashes",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6045,11 +6057,13 @@ window.POSTS = [
     ],
     "entities": [
       "NVIDIA"
-    ]
+    ],
+    "feed_summary": "엔비디아가 네오클라우드 성장을 위해 도입한 GPU 부채 보증 구조의 금융 메커니즘을 설명합니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   },
   {
     "title": "Meta Compute: Everyone Wants To Be A Neocloud",
-    "summary": "메타(Meta)의 자체 인프라를 네오클라우드로 전환하려는 시도와 추천 시스템 확장 계획을 다룹니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 원문은 Bloomberg 헤드라인(Meta가 Neocloud가 될 수 있다)에 Coreweave, Nebius 등이 매도되고 \"과잉 설비\" 논쟁이 되살아났다고 서술.\n핵심 팩트: 원문은 두 반응 모두 틀렸고 Meta의 데이터센터·컴퓨팅 조달은 가속한다고 봄. 올해 상반기에만 클라우드와 콜로로 5GW 초과를 계약했고, 2024년 초 이후 계약은 거의 10GW라고 서술.\n영향도: 원문은 Meta가 네 가지 고부가가치 용도(프런티어 모델, RecSys, Claude 비공개 인스턴스 기반 서비스, SpaceX형 거래)를 갖는다고 봄.\n단서: Anthropic과의 협상은 \"SemiAnalysis 독점\" 추정이며 확정이 아님.",
     "url": "https://newsletter.semianalysis.com/p/meta-compute-everyone-wants-to-be",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6066,11 +6080,13 @@ window.POSTS = [
     ],
     "entities": [
       "Meta"
-    ]
+    ],
+    "feed_summary": "메타(Meta)의 자체 인프라를 네오클라우드로 전환하려는 시도와 추천 시스템 확장 계획을 다룹니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   },
   {
     "title": "EMIB-T Roadmap, Custom HBM, HBM4 Packaging Challenges, Microfluidic Cooling, Photonic Interconnects, and More",
-    "summary": "ECTC 2026 학회에서 발표된 인텔 EMIB-T, HBM4 패키징, 미세유체 냉각 기술 동향을 정리했습니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 원문은 트랜지스터 밀도 스케일링이 둔화되어 첨단 패키징이 주된 스케일링 축이 되었고, AI 가속기가 커지면서 패키지 자체가 한계에 도달했다고 서술. 원형 인터포저의 크기·웨이퍼 활용 제약, HBM4E의 I/O 2배와 속도 상승, 수 kW급 패키지의 냉각 문제를 꼽음.\n핵심 팩트: 원문은 Intel이 EMIB-T를 36/35 µm 범프 피치와 2× 레티클 실리콘에서 검증했고(25 µm 시험 중), 240 mm × 240 mm(약 67 레티클) 쿼터 패널 시험 차량을 선보였다고 서술. Marvell의 커스텀 HBM은 호스트 ASIC의 HBM PHY 면적을 약 60% 줄인다고 주장. TSMC 마이크로필러 직접 실리콘 냉각은 4 LPM에서 4 kW, 8 LPM에서 5.3 kW를 방열했다고 서술.\n영향도: 원문은 EMIB-T가 Google TPU v9에 쓰일 것으로 예상되며 대형 패키지 AI 가속기에서 TSMC CoWoS의 가장 신뢰할 만한 대안이라고 봄. Nvidia가 GTC에서 Feynman에 커스텀 HBM을 쓴다고 발표했다고 서술.\n단서: 대부분 학회 발표(실험실 시험 차량, 시뮬레이션) 값이며 양산 수율과 신뢰성은 별개. 원문은 EMIB-T가 여러 면에서 CoWoS에 뒤처진다고 평가.",
     "url": "https://newsletter.semianalysis.com/p/ectc2026",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6088,11 +6104,13 @@ window.POSTS = [
     "entities": [
       "Intel",
       "HBM"
-    ]
+    ],
+    "feed_summary": "ECTC 2026 학회에서 발표된 인텔 EMIB-T, HBM4 패키징, 미세유체 냉각 기술 동향을 정리했습니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   },
   {
     "title": "TokenBudgeting: Our Conversations with Enterprises on Token Spend",
-    "summary": "기업들의 AI 토큰 사용량 모니터링 및 예산 관리 실태를 조사한 인터뷰 정리입니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 원문은 기업 내 토큰 소비가 올해 초 \"tokenmaxxing\" 이후 예산 한도에 부딪힌다는 보도가 있어, 50곳 넘는 기업과 Slack, 전화, Databricks AI Summit에서 대화했다고 서술.\n핵심 팩트: 원문은 Meta, Uber 사례가 과장되어 보도되었고 잘못된 인센티브와 배분에서 나온 것이라 봄. 예산 상한은 이제 일반적이지만 월 $250에서 수만 달러까지 합의된 수치가 없음.\n영향도: 원문은 90분위 이상 고객이 매출 대부분을 차지해 2H26 API 매출 위험이 크지 않고, Anthropic과 OpenAI의 API 사업이 현재의 월간 순증 속도로 계속 성장할 것으로 봄.\n단서: 대화 표본(n＞50)과 Ramp 데이터는 기술 친화적 기업에 치우친 분포라고 원문이 인정함.",
     "url": "https://newsletter.semianalysis.com/p/tokenbudgeting-our-conversations",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6110,11 +6128,13 @@ window.POSTS = [
     "entities": [
       "OpenAI",
       "Anthropic"
-    ]
+    ],
+    "feed_summary": "기업들의 AI 토큰 사용량 모니터링 및 예산 관리 실태를 조사한 인터뷰 정리입니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   },
   {
     "title": "US Grid Constraints: Towards 40GW+ of Behind-The-Meter Datacenter by 2028?",
-    "summary": "미국 전력망 송전 병목으로 인해 2028년까지 40GW 이상의 배후 전력망(Behind-The-Meter) 데이터센터가 구축될 가능성을 제시합니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 원문은 미국 계통이 데이터센터 부하 대부분을 감당하고 있으나 전환점에 도달했고, 계통이 용량을 충분히 빨리 추가하지 못해 최대 규모 수요자에게 BTM(계량기 뒤 발전)이 사실상 유일한 길이 되고 있다고 서술.\n핵심 팩트: 원문은 미국 데이터센터 증설이 2026년 +21GW에서 2030년까지 +84GW로 늘고, 계통의 순증 ELCC 용량은 연 약 15GW(연말 20GW+ 추세)에 그치며 헤드룸이 2027년에 음수가 된다고 추정. BTM이 2028년 이후 신규 미국 데이터센터의 절반 이상을 공급하고, BTM 장비 시장 규모가 2029년에 연 50GW를 넘는다고 전망.\n영향도: 원문은 AI 랩이 전력 확보 속도와 확실성에 매우 민감해 신뢰성(업타임) 요구를 완화하면서 BTM 경제성이 개선되었다고 봄. ERCOT에서는 BTM과 계통을 섞은 하이브리드 구조(Batch Zero, NMA, BYOG, WLPUN, PCLR)가 제도화되고 있다고 서술.\n단서: 헤드룸과 BTM 비중은 원문 Energy Model 추정이며, 부하 유연성·인터커넥션 개혁·송전 확충 등 대안은 이번 글의 범위 밖이라고 밝힘.",
     "url": "https://newsletter.semianalysis.com/p/us-grid-constraints-towards-40gw",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6132,11 +6152,13 @@ window.POSTS = [
     "entities": [
       "Microsoft",
       "Google"
-    ]
+    ],
+    "feed_summary": "미국 전력망 송전 병목으로 인해 2028년까지 40GW 이상의 배후 전력망(Behind-The-Meter) 데이터센터가 구축될 가능성을 제시합니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   },
   {
     "title": "China’s CXMT Is Set to Challenge DRAM Incumbents",
-    "summary": "중국 창신메모리(CXMT)의 IPO 및 공정 기술 추격을 통한 글로벌 DRAM 제조사들과의 경쟁 구도를 분석합니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 원문은 CXMT(2016년 설립, 합비 지방정부 \"506\" 프로젝트)가 독일 Qimonda 특허·문서·인력을 기반으로 DRAM 기술을 얻고, 합비 국유 벤처자본의 장기 자금으로 약 10년의 적자를 견뎠다고 서술. 상하이 STAR 시장 상장을 앞두고 있다고 봄.\n핵심 팩트: 원문은 CXMT가 FY25 매출 약 $8.6B(+156%), 순이익 첫 흑자 약 $1B이고 1Q26 매출 $7.3B(약 700% 증가), 영업이익률 약 70%라고 서술. 원문 모델은 2026년 매출이 $50B를 넘을 수 있다고 추정.\n영향도: 원문은 실적 급증이 점유율 확대가 아니라 ASP 폭등(1Q26 비트 출하 +11%, ASP +57%)에서 나온 것이라 봄. 2026년 말 웨이퍼 용량이 약 350 kwspm으로 Micron(약 385)에 근접한다고 추정.\n단서: 원문은 HBM이 아직 미성숙해 2025년 매출의 약 99%가 DDR/LPDDR이며 HBM3 8-hi의 종합 수율을 약 25%로 모델링. IPO 자금 사용 계획에 HBM 전용 항목이 없다고 서술.",
     "url": "https://newsletter.semianalysis.com/p/chinas-cxmt-is-set-to-challenge-dram",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6153,11 +6175,13 @@ window.POSTS = [
     ],
     "entities": [
       "CXMT"
-    ]
+    ],
+    "feed_summary": "중국 창신메모리(CXMT)의 IPO 및 공정 기술 추격을 통한 글로벌 DRAM 제조사들과의 경쟁 구도를 분석합니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   },
   {
     "title": "Stop Saying Half of 2026 US Datacenter Capacity Is Canceled",
-    "summary": "2026년 미국 데이터센터 용량 절반이 취소될 것이라는 주장에 대해 개별 인허가 문서를 전수 조사한 결과입니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 원문은 \"2026년 미국 데이터센터 용량의 절반이 지연 또는 취소\"라는 주장이 Bloomberg의 2026-04-01 기사(중국 전기 부품 의존)에서 시작해 여러 매체의 자극적 버전으로 퍼졌다고 서술.\n핵심 팩트: 원문은 자사 데이터센터 모델의 2026년 말 북미 하이퍼스케일러 자체 건설 전망이 최근 6개월간 약 1%, 북미 코로케이션은 5% 미만만 움직였다고 서술. 원문은 이 주장이 분모가 크게 틀린 데이터(Sightline Climate)에 기반하며, 지연 대부분이 발표 단계(사전 건설)의 투기적 용량이라고 반박.\n영향도: 원문은 실제 지연(Nebius 뉴저지, Core Scientific, Oracle/STACK 뉴멕시코)은 있지만 소수의 구체적 사례이고, 납품되는 MW는 오히려 가속한다고 봄. 장비 공급사 우려(예: Vertiv)도 과장이라고 주장.\n단서: 글은 반박 논조이고 자사 모델의 우월성을 강조함. 반박 근거의 일부(위성 이미지 모델, 비공개 방법)는 외부에서 검증할 수 없음.",
     "url": "https://newsletter.semianalysis.com/p/stop-saying-half-of-2026-us-datacenter",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6174,11 +6198,13 @@ window.POSTS = [
     ],
     "entities": [
       "Microsoft"
-    ]
+    ],
+    "feed_summary": "2026년 미국 데이터센터 용량 절반이 취소될 것이라는 주장에 대해 개별 인허가 문서를 전수 조사한 결과입니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   },
   {
     "title": "RL Systems Mind the Gap: Matching Trainer and Generator Throughput",
-    "summary": "강화학습(RL) 시스템에서 학습기(Trainer)와 생성기(Generator) 간의 처리량 불일치 해결 인프라를 다룹니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 원문은 코딩 어시스턴트 시장이 상위 6개 업체 기준 ARR $30B+이며 연말까지 $100B를 넘을 전망이라고 서술. 에이전트 코딩 능력은 사전학습만이 아니라 RL이 끌어내며 Claude Opus 4.8이 SWE-bench Pro 69.2%, Terminal-Bench 2.1 74.6%라고 인용.\n핵심 팩트: 원문은 RL 시스템 효율을 \"트레이너 소비 속도와 제너레이터 생산 속도를 맞추는 문제\"로 정식화하고, 오픈소스 RL 프레임워크로 오픈 모델을 학습한 4개 사례(Prime RL, verl, slime)에서 모두 제너레이터가 병목인 \"generation-bound\" 시스템이라고 관찰.\n영향도: 원문은 PipelineRL식 비동기 학습과 정책 노후도(policy staleness) 한도, 오버샘플링, 조기 가지치기, 부분 롤아웃, 분리 서빙이 큐 상태를 좌우한다고 봄.\n단서: 사례 4건은 모두 Qwen3 235B 또는 GLM-5 계열의 특정 구성이고, TCO 비교는 수집되지 않음.",
     "url": "https://newsletter.semianalysis.com/p/rl-systems-mind-the-gap-matching",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6196,11 +6222,13 @@ window.POSTS = [
     "entities": [
       "OpenAI",
       "DeepSeek"
-    ]
+    ],
+    "feed_summary": "강화학습(RL) 시스템에서 학습기(Trainer)와 생성기(Generator) 간의 처리량 불일치 해결 인프라를 다룹니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   },
   {
     "title": "Is SMIC N+3’s Metal Pitch Smaller than Intel 18A’s?",
-    "summary": "중국 SMIC N+3 공정 및 기린 9030 칩의 실물 분해(Teardown)를 통해 배선 피치와 인텔 18A 공정과의 차이를 분석합니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 원문은 SemiAnalysis가 오리건에 구축한 분해·평가 연구소 STEEL의 첫 공개 보고서로, Huawei Mate 80 Pro의 HiSilicon Kirin 9030(SMIC N+3)을 TSMC N6 기반 MediaTek Helio G99와 비교했다고 서술.\n핵심 팩트: 원문은 N+3의 최소 금속 피치(M0)가 32.5 nm로 Panther Lake의 Intel 18A(36 nm)보다 약 10% 촘촘하나 \"불완전하고 취사선택한 지표\"라고 봄. N+3의 트랜지스터 밀도 113.4 MTr/mm²는 TSMC N6(107.7)를 약간 넘지만 DUV 다중 패터닝과 DTCO의 대가로 복잡도·효율·공정 제어가 불리하다고 서술.\n영향도: 원문은 Kirin 9030 Pro 성능이 3년 전 안드로이드 플래그십 수준이고 효율 격차는 더 크다고 평가. Huawei의 로드맵은 평면 스케일링이 아니라 3D 적층(LogicFolding, τ 스케일링)으로 이동한다고 서술.\n단서: 단면 소수 샘플에서 측정한 수치로 절대값은 근사이며, 원문도 \"상대 격차가 중요하다\"고 밝힘. 미래 노드(N+4, N+5) 수치는 SemiAnalysis의 이론적 추정.",
     "url": "https://newsletter.semianalysis.com/p/steel-smic-n3-teardown",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6219,11 +6247,13 @@ window.POSTS = [
       "Intel",
       "Meta",
       "SMIC"
-    ]
+    ],
+    "feed_summary": "중국 SMIC N+3 공정 및 기린 9030 칩의 실물 분해(Teardown)를 통해 배선 피치와 인텔 18A 공정과의 차이를 분석합니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   },
   {
     "title": "Intel Should Raise Capital",
-    "summary": "인텔의 설비 투자 비용과 유상증자 등 자본 확충 필요성에 관한 재무 구조 분석입니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 원문은 Intel 이사회가 교체되어 업계를 이해하는 구성(신임 의장 전 Qualcomm 출신, CEO Lip Bu Tan, Microchip Steve Sanghi, ASML Eric Meurice 등)이 되었다고 봄.\n핵심 팩트: 원문은 Intel이 자사주 매입 대신 신주를 발행해야 한다고 주장함. 4~5% 희석으로 약 $25B을 조달할 수 있고, 시가총액은 약 $498B이라고 서술함.\n영향도: 원문은 Terafab(최대 $119B 규모 다단계 프로젝트), 14A 용량, N3 부족에 따른 파운드리 수요를 감당하려면 영업현금흐름을 넘는 자본이 필요하다고 봄.\n단서: 주장은 에디토리얼 의견이며 Intel 주가가 2000년 버블 이후 후행 12개월 기준 가장 비싼 구간이라는 점을 원문 스스로 인정함.",
     "url": "https://newsletter.semianalysis.com/p/intel-should-raise-capital",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6240,11 +6270,13 @@ window.POSTS = [
     ],
     "entities": [
       "Intel"
-    ]
+    ],
+    "feed_summary": "인텔의 설비 투자 비용과 유상증자 등 자본 확충 필요성에 관한 재무 구조 분석입니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   },
   {
     "title": "DeepSeekV4 1.6T Day 0 to Day 43 Performance Over Time - Huawei, GB300 NVL72, MI355X, B200",
-    "summary": "DeepSeek v4 1.6T 모델의 출시 직후부터 43일간의 하드웨어별(화웨이, 엔비디아, AMD) 추론 최적화 추이를 측정했습니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 원문은 InferenceX 팀이 DeepSeek V4 Pro(1.6T)의 Day 0부터 43일째까지 성능을 오픈소스 이미지와 레시피로 기록하고, Huawei Ascend 950DT의 Day 0 추론도 분석했다고 서술.\n핵심 팩트: 원문은 CUDA에서는 vLLM, SGLang, 분리 prefill이 Day 0에 바로 동작했고, Nvidia TensorRT-LLM은 hidden size 7168을 지원하지 못해 오류 가드를 제거하는 임시 조치로 한동안 잘못된 출력이 나왔다고 서술. AMD MI355X는 Day 0에 FP8로만 동작해 사용자당 1~2 tok/s 수준이었으나, AMD SGLang 팀이 Day 26까지 100배 이상 개선했다고 봄.\n영향도: 원문은 GB300 NVL72가 SGLang에서 압도적이며 MTP 활성 시 50 tok/s/user에서 백만 출력 토큰당 $0.156(8k 입력/1k 출력)이라고 서술. 랙 스케일 NVLink 도메인이 MoE all-to-all을 NVLink 내에 유지시키는 이점이라고 설명.\n단서: GB300 결과는 CoreWeave가 제공한 예비 랙에서 얻었고, 비교 대상별 소프트웨어 성숙도가 다름.",
     "url": "https://newsletter.semianalysis.com/p/deepseekv4-16t-day-0-to-day-43-performance",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6263,7 +6295,9 @@ window.POSTS = [
       "NVIDIA",
       "AMD",
       "DeepSeek"
-    ]
+    ],
+    "feed_summary": "DeepSeek v4 1.6T 모델의 출시 직후부터 43일간의 하드웨어별(화웨이, 엔비디아, AMD) 추론 최적화 추이를 측정했습니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   },
   {
     "title": "Unitree's Impossible Trajectory Is Still Overlooked",
@@ -6290,7 +6324,7 @@ window.POSTS = [
   },
   {
     "title": "To Boldly Go: The Case for Space Datacenters",
-    "summary": "우주 데이터센터의 총소유비용(TCO)과 지상 데이터센터 대비 경제적 실현 가능 시점을 분석합니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 원문은 Elon Musk의 궤도 컴퓨팅 발언(2026-02 Dwarkesh 팟캐스트: 5년 내 연 수백 GW)과 SpaceX S-1(2026-05-20: 장기적으로 연 100GW의 컴퓨팅을 우주로 발사)을 인용하며, 우주 데이터센터를 둘러싼 통념을 검토한다고 서술.\n핵심 팩트: 원문은 현재 기술로 우주 배치가 지상보다 수 배 비싸다고 봄. 2026년 30.5kW B300 클러스터(GPU 16개)의 총 프로그램 자본비는 우주 $4.1M vs 지상 $1.4M, 시간당 GPU 총소유비용(TCO)은 $8.64 vs $2.37, 신뢰도 보정 후 LCOC는 $10.91 vs $2.49.\n영향도: 원문의 기본 시나리오는 비용 격차가 2026년 4배 초과에서 2040년경 패리티로 좁혀지고, 2030년대 초에는 약 30% 비싼 수준이 되어 첫 대규모 우주 배치의 문이 열린다고 봄. 지상 증설이 막히는 \"Elon Musk 시나리오\"에서는 우주가 필수가 된다고 서술.\n단서: 이 모델의 기본·Musk 시나리오는 모두 원문이 \"업사이드 케이스\"라고 밝히며 자사 산업 모델(확정 증설 기준)과 다르다고 명시. 칩 생산이 우선 제약이라고 봄.",
     "url": "https://newsletter.semianalysis.com/p/to-boldly-go-the-case-for-space-datacenters",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6307,11 +6341,13 @@ window.POSTS = [
     ],
     "entities": [
       "SpaceX"
-    ]
+    ],
+    "feed_summary": "우주 데이터센터의 총소유비용(TCO)과 지상 데이터센터 대비 경제적 실현 가능 시점을 분석합니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   },
   {
     "title": "AI Dark Output: The Visible Cost of Invisible Output",
-    "summary": "AI로 인해 생성되는 보이지 않는 경제적 산출물(Dark Output)의 측정 난제와 인프라 비용을 다룹니다.",
+    "summary": "배경: 원문은 1980~90년대 컴퓨터 혁명이 생산성 통계에서 보이지 않았던 Solow 역설과 같은 문제가 AI에서도 나타난다고 봄. 비용(달러, 전력, 물, 일자리)은 즉시 보이지만 AI가 만든 가치는 국민계정에 잡히지 않는다는 주장.\n핵심 팩트: 원문은 국민계정이 못 보는 AI의 산출을 \"Dark Output\"이라 명명하고, 대체형(substitution)과 신규형(new)으로 나눔. 현재 AI가 상당 부분 보강하거나 자동화할 수 있는 과업과 연결된 인건비를 약 $1.5T로 추정.\n영향도: 원문은 AI 산출이 보이지 않으면 투자 수익이 거품으로 오독되고 정책과 세제가 잘못 설계될 수 있다고 경고.\n단서: $1.5T는 \"사라진 산출\"이 아니라 \"노출된 노동\"이며, 6단계 증거 사다리 중 Tier 5, 6 증거는 아직 못 찾았다고 원문이 밝힘. 확인된 증거 대부분은 대체가 아니라 보강을 가리킨다고 서술.",
     "url": "https://newsletter.semianalysis.com/p/ai-dark-output-the-visible-cost-of",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6329,11 +6365,13 @@ window.POSTS = [
     "entities": [
       "Google",
       "OpenAI"
-    ]
+    ],
+    "feed_summary": "AI로 인해 생성되는 보이지 않는 경제적 산출물(Dark Output)의 측정 난제와 인프라 비용을 다룹니다.",
+    "has_detail": true
   },
   {
     "title": "Finding Miscompiles for Fun, Not Profit",
-    "summary": "최신 LLM 코드 생성 및 컴파일러 파이프라인에서 발생하는 오컴파일(Miscompile) 디버깅 사례를 다룹니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 저자는 ML 컴파일러 경력 10년(Google, Waymo, OpenAI)이며 2026-01 LLVM에서 퍼저로 5개 버그를 고쳤고, 5월 중순 SemiAnalysis 계약직으로 합류해 NVIDIA의 ptxas에 같은 기법을 적용함.\n핵심 팩트: 원문은 3일 만에 ptxas가 오컴파일하는 프로그램 40개, 1주 후 약 80개를 확인했다고 서술. 이후 AMDGPU 백엔드도 비슷한 속도로 발견. 서브에이전트 50개로 LLVM 코드를 읽게 하자 AMDGPU에서 4분에 1건, x86 백엔드에서 분당 약 2건의 버그를 발견했다고 함.\n영향도: 원문은 코드 읽기 에이전트 방식이 몇 시간에 $10,000 초과를 썼고, 퍼저가 못 찾는 종류(예: atomic store가 비원자 store 2개로 변환되는 사례)를 찾는다고 봄.\n단서: 에이전트 발견 버그는 퍼저 버그보다 평균 심각도가 낮고 에이전트가 틀릴 수도 있음. x86 버그는 약 20%만 검토됨.",
     "url": "https://newsletter.semianalysis.com/p/finding-miscompiles-for-fun-not-profit",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6351,6 +6389,8 @@ window.POSTS = [
     "entities": [
       "NVIDIA",
       "OpenAI"
-    ]
+    ],
+    "feed_summary": "최신 LLM 코드 생성 및 컴파일러 파이프라인에서 발생하는 오컴파일(Miscompile) 디버깅 사례를 다룹니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "has_detail": true
   }
 ];

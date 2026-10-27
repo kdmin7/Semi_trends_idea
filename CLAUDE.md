@@ -25,6 +25,13 @@ SemiAnalysis(Substack) 새 글을 매일 수집·요약해 메일로 보내고, 
 - 원문 전용 폴더에는 같은 이름 형식의 기존 카탈로그 메모 파일(약 2KB)이 있어 이름으로 원문과 구분되지 않는다. 그래서 이 폴더는 저장 대상으로만 쓰고, 원문 입력(`storage.raw_files`)은 로컬 사본을 읽는다. 폴더의 `README.md` 색인은 자동 갱신되지 않는다.
 - 한쪽에만 있는 파일은 `python scripts/sync_to_gdrive.py [--dry-run]`로 맞춘다(추가만 하고 지우거나 덮어쓰지 않는다). `run_daily.py`는 원문 md 수집만 하고 Gemini 요약(`batch_summarize.py`)·동기화는 수동이다.
 
+## 요약 작성·저장 (수동)
+- 형식은 `semianalysis_summary_prompt.md`(10개 섹션)가 기준이다. 자동 경로(Gemini 한도, Anthropic 키 없음)가 막혀 있으면 원문 md를 읽고 직접 쓴다.
+- 파일 이름은 원문 md 이름에서 `.md`를 뺀 뒤 `_summary.md`를 붙인다(예: `2026-07-08_anthropic-3q26-profit-over-1b-the_summary.md`). 사이트 빌드는 헤더의 `/p/<slug>` URL 또는 제목·파일명으로 글과 맞춘다.
+- 저장은 `storage.save_summary(filename, text, overwrite=True)` 한 번으로 로컬 `summary/`, Drive 연도 폴더, `00_핵심요약_전체`에 모두 쓴다. 경로를 직접 쓰지 않는다. 저장 후 `python build_site.py`로 병합 건수를 확인한다.
+- 원문 frontmatter의 `content`가 `paid-preview`면 수집 범위에 "유료 미리보기(일부)"와 누락 구간을 적고 추측하지 않는다. `free`면 "전문"이다. 원문 수치끼리 어긋나면 "한계 및 주의점"에 계산식과 함께 적는다.
+- 긴 원문은 링크·이미지 마크다운을 제거해 읽으면 분량이 크게 준다. 작업 중간 파일은 scratchpad에 두고, 한 건씩 저장해 진행분을 잃지 않게 한다.
+
 ## 파일·보안 규칙
 - 비밀값(`.env`, `mcp_config.json`, `.agents/mcp_config.json`)은 `.gitignore`로 제외되어 있다. 커밋 전 키가 섞이지 않았는지 확인한다. `.mcp.json`은 `${변수}` 참조만 사용한다.
 - `config/email.yml`에는 메일 수신자(테스트 주소)가 있다. 공개 저장소로 푸시하기 전에 반드시 점검한다.

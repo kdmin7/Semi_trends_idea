@@ -349,3 +349,11 @@
 - `README.md`·`change.md`·`config/config.yaml`에 적힌 개인 이메일을 `test@example.com`/`owner@example.com`으로 치환(과거 커밋 기록에는 남아 있음).
 - 가이드 문서 3개를 `docs/`(공개 Pages 폴더) 밖 `notes/`로 이동.
 - 유료 글 요약(약 470자)은 현재대로 사이트 데이터에 포함해 공개하기로 결정.
+
+## 2026-10-28 — 새로 받은 원문 22건 한국어 요약 작성
+
+- 10-27에 수집한 원문 22건(2026-05-28~08-07)을 `semianalysis_summary_prompt.md`의 10개 섹션 형식으로 요약해 Drive(연도 폴더 + `00_핵심요약_전체`)와 로컬 `summary/`에 저장(`storage.save_summary`). 자동 경로(Gemini 한도, Anthropic 키 없음)가 막혀 직접 작성.
+- 21건은 유료 미리보기 기반이라 수집 범위에 누락 구간을 명시했고, 원문에 없는 내용은 추측하지 않았다. `AI Dark Output`(05-29)만 전문.
+- 검산 중 발견한 원문 수치 불일치는 각 요약의 "한계 및 주의점"에 기록: 예) Vera Rubin 글의 Kimi K3 가중치 저장량 산술 표기, SMIC 글의 SRAM 밀도 단위(Mib vs Mbit) 혼용, 우주 데이터센터 글의 LCOC/PFLOP-hr 환산과 100TW/100GW 표기, CXMT 글의 용량 점유율(13%/11% 기준), DeepSeek V4 글의 "Day 26"과 날짜 구간 불일치.
+- 사이트 재빌드 결과 요약 병합 341/343건. 요약이 없는 글은 2건: `huawei-deepseek`(10-21), `amazons-trainium-takes-a-strike-at`(10-23).
+- 원문이 3,656바이트인 `anthropic-3q26-...`는 `STUB_MAX_BYTES` 미만이라 매번 미수집으로 잡히는 문제는 그대로.
