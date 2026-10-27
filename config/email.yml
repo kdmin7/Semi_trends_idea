@@ -1,0 +1,5 @@
+# 실제 수신자는 .env 의 EMAIL_RECIPIENT 로 지정한다 (공개 저장소에 주소를 올리지 않기 위함)
+recipient: you@example.com
+subject_prefix: "[모니터링+테스트]"
+# 한 번에 보낼 최대 건수 (넘으면 다음 실행에서 이어서 발송)
+max_items: 30

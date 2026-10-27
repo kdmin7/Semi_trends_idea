@@ -1,0 +1,15 @@
+period:
+  start: 2020-01-01
+  end:            # 비워 두면 실행 시점까지 계속 추적 (매일 자동 실행용)
+sources:
+  - label: SemiAnalysis
+    url: https://semianalysis.com/
+    archive: https://newsletter.semianalysis.com   # Substack 아카이브 API 주소
+
+storage:
+  # SemiAnalysis 원문·요약 md 의 기본 저장소 (Google Drive). 연결돼 있지 않으면 로컬(output/semianalysis)만 사용한다.
+  # 원문은 <폴더>/<연도>/, 요약은 <폴더>/00_핵심요약_전체/ 에 쌓인다. scripts/storage.py 참조.
+  drive_dir: G:/내 드라이브/SemiAnalysis
+  # 새 원문 md(YYYY-MM-DD_제목.md)를 직접 저장할 폴더. 비워 두면 위 drive_dir 의 연도 폴더를 쓴다.
+  # 대상: 테스트 계정 Drive 의 semianalysis_markdown_archive (공유 + 바로가기로 G: 에 연결됨)
+  raw_dir: G:/.shortcut-targets-by-id/1reBzh-ribSI5XVQTpv7RNspiSLqub3KU/Semianalysis원본/semianalysis_markdown_archive_with_dates/semianalysis_markdown_archive

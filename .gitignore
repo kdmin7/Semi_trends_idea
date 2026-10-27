@@ -1,0 +1,36 @@
+# 1. Credentials & Secrets
+.env
+.env.*
+*.env
+*.env.*
+!*.env.example
+
+# 2. Local MCP Configurations (Contain active API Keys)
+mcp_config.json
+.agents/mcp_config.json
+*mcp_config.json
+!*mcp_config.example.json
+
+# 3. Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 4. Logs & Temp
+*.log
+.system_generated/
+
+# 5. Claude Code 로컬 설정/락
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+
+# 6. 수집한 외부 글 본문 (저작물, 커밋 금지)
+output/semianalysis/
+
+# 7. 글별 상세 요약 JSON (개인 아카이브용, 외부 공유 지양 — 공개 저장소·Pages 제외)
+assets/summaries/
+docs/assets/summaries/
+
+# 8. 요약 md 카탈로그 동기화 산출물 (공개 Pages로 요약 원문이 노출되지 않도록 제외)
+docs/summaries/
+docs/index.json
