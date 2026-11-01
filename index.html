@@ -173,6 +173,80 @@
     .none { padding: 64px 24px; text-align: center; color: var(--muted); }
     .none strong { display: block; font-size: 18px; color: var(--text); margin-bottom: 6px; }
 
+    
+    /* ===== Flat Notion Style 아티클 리딩 뷰어 ===== */
+    .detail { padding: 48px 60px 140px; background: #ffffff; }
+    .dark .detail { background: #0b1120; }
+    .detail .inner { max-width: 860px; margin: 0 auto; }
+    
+    .dtitle { font-size: 32px; line-height: 1.35; font-weight: 800; margin: 16px 0 8px; color: var(--text); letter-spacing: -0.03em; }
+    .dsub { font-size: 19px; line-height: 1.55; font-weight: 500; color: var(--muted); margin: 0 0 24px; }
+    
+    /* 플랫 아티클 섹션 헤더 (밑줄 제거, 24px 아이콘 수직 칼정렬, 시원한 상단 마진) */
+    .article-sec-h {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 48px;
+      margin-bottom: 20px;
+      letter-spacing: -0.025em;
+    }
+    
+    /* 플랫 콜아웃: 테두리 박스 없이 은은한 배경과 굵은 바만으로 깔끔하게 정돈 */
+    .flat-callout-emerald {
+      border-left: 5px solid var(--accent);
+      background: #f0fdf4;
+      border-radius: 0 14px 14px 0;
+      padding: 22px 28px;
+      margin: 14px 0 28px 0; /* 상단 마진을 14px로 대폭 축소하여 버튼과의 여백 정돈 */
+    }
+    .dark .flat-callout-emerald {
+      background: rgba(6, 78, 59, 0.2);
+      border-left-color: #10b981;
+    }
+    
+    .flat-callout-purple {
+      border-left: 5px solid #8b5cf6;
+      background: #faf5ff;
+      border-radius: 0 14px 14px 0;
+      padding: 24px 28px;
+      margin: 32px 0;
+    }
+    .dark .flat-callout-purple {
+      background: rgba(88, 28, 135, 0.2);
+      border-left-color: #a855f7;
+    }
+
+    .flat-callout-amber {
+      border-left: 5px solid #f59e0b;
+      background: #fffbeb;
+      border-radius: 0 14px 14px 0;
+      padding: 24px 28px;
+      margin: 24px 0;
+    }
+    .dark .flat-callout-amber {
+      background: rgba(120, 53, 15, 0.2);
+      border-left-color: #f59e0b;
+    }
+
+    /* 완벽하게 일치하는 단일 텍스트 규격 */
+    .article-p-justified {
+      font-size: 17.5px;
+      line-height: 1.85;
+      letter-spacing: -0.015em;
+      text-align: justify;
+      text-justify: inter-word;
+      word-break: keep-all;
+      color: #334155;
+      margin: 0;
+    }
+    .dark .article-p-justified {
+      color: #cbd5e1;
+    }
+
     /* 3) 우측 상세 패널 */
     .detail { padding: 36px 48px 80px; }
     .detail .inner { max-width: 880px; margin: 0 auto; }
@@ -209,32 +283,41 @@
     <main class="pane detail" id="detailPane">
       <p id="detailEmpty" class="empty">왼쪽 목록에서 리포트를 선택하세요</p>
       <div id="detailView" class="inner hidden">
-        <div class="dmeta">
-          <span id="modalCategory" class="tag"></span>
-          <span id="modalAccessBadge" class="tag paid"></span>
-          <span id="modalEvidenceBadge" class="tag"></span>
-          <span id="modalDate"></span>
+        <!-- 1. 일체형 상단 메타바 (카테고리, 유료여부, 발행일, 저자 완벽 수평 정렬) -->
+        <div class="flex flex-wrap items-center gap-2.5 text-sm text-slate-500 dark:text-slate-400 mb-3">
+          <span id="modalCategory" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300"></span>
+          <span id="modalAccessBadge" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300"></span>
+          <span id="modalEvidenceBadge" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"></span>
+          <span class="text-slate-300 dark:text-slate-700">•</span>
+          <span id="modalDate" class="font-medium text-slate-600 dark:text-slate-400"></span>
+          <span id="modalAuthorSep" class="text-slate-300 dark:text-slate-700">•</span>
+          <span id="modalAuthor" class="font-medium text-slate-600 dark:text-slate-400"></span>
         </div>
+
+        <!-- 2. 대제목 및 영문 부제목 -->
         <h2 id="modalTitle" class="dtitle"></h2>
         <p id="modalTitleEn" class="dsub hidden"></p>
 
-        <div class="actions">
-          <button id="modalBookmarkBtn" onclick="toggleModalBookmark()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border border-slate-300 dark:border-dark-border hover:border-slate-400 bg-white dark:bg-dark-card text-slate-700 dark:text-slate-300 shadow-sm transition">
-            <i data-lucide="bookmark" class="w-4 h-4"></i>
+        <!-- 3. 액션 텍스트 링크 (박스 완전 제거, 순수 텍스트 + 작은 아이콘, 간격 축소) -->
+        <div class="flex flex-wrap items-center gap-5 text-sm mt-3.5 mb-2.5 text-slate-500 dark:text-slate-400">
+          <button id="modalBookmarkBtn" onclick="toggleModalBookmark()" class="inline-flex items-center gap-1.5 font-medium hover:text-amber-500 transition py-1">
+            <i data-lucide="bookmark" class="w-4 h-4 text-amber-500 shrink-0"></i>
             <span id="modalBookmarkLabel">북마크 추가</span>
           </button>
-          <button id="modalWordBtn" onclick="downloadModalWord()" class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold border border-slate-300 dark:border-dark-border hover:border-slate-400 bg-white dark:bg-dark-card text-slate-700 dark:text-slate-300 shadow-sm transition" title="현재 리포트를 Word 문서(.docx)로 저장">
-            <i data-lucide="file-down" class="w-4 h-4"></i>
+          <span class="text-slate-300 dark:text-slate-700">•</span>
+          <button id="modalWordBtn" onclick="downloadModalWord()" class="inline-flex items-center gap-1.5 font-medium hover:text-sky-600 dark:hover:text-sky-400 transition py-1" title="Word 문서(.docx)로 저장">
+            <i data-lucide="file-down" class="w-4 h-4 text-sky-600 dark:text-sky-400 shrink-0"></i>
             <span>Word 다운로드</span>
           </button>
-          <a id="modalExternalLink" href="#" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-md shadow-emerald-600/30">
+          <span class="text-slate-300 dark:text-slate-700">•</span>
+          <a id="modalExternalLink" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 font-medium hover:text-emerald-600 dark:hover:text-emerald-400 transition py-1">
+            <i data-lucide="external-link" class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0"></i>
             <span>Substack 원문 읽기</span>
-            <i data-lucide="external-link" class="w-4 h-4"></i>
           </a>
         </div>
 
         <!-- 상세 탭 바: 글별 요약 JSON이 로드된 경우에만 표시 -->
-        <div id="modalTabs" role="tablist" class="tabsbar hidden gap-1 border-b border-slate-200 dark:border-dark-border">
+        <div id="modalTabs" role="tablist" class="tabsbar !hidden gap-1 border-b border-slate-200 dark:border-dark-border">
           <button role="tab" data-tab="overview" onclick="setModalTab('overview')" class="modal-tab px-5 py-3 text-base font-bold border-b-2 -mb-px transition">개요</button>
           <button role="tab" data-tab="detail" onclick="setModalTab('detail')" class="modal-tab px-5 py-3 text-base font-bold border-b-2 -mb-px transition">상세</button>
           <button role="tab" data-tab="ref" onclick="setModalTab('ref')" class="modal-tab px-5 py-3 text-base font-bold border-b-2 -mb-px transition">참고</button>
@@ -770,6 +853,13 @@
 
       document.getElementById('modalCategory').textContent = cat.name + subLabel;
       document.getElementById('modalDate').textContent = article.publishDate || '날짜 미확인';
+      const authorEl = document.getElementById('modalAuthor');
+      const authorSep = document.getElementById('modalAuthorSep');
+      if (authorEl && authorSep) {
+        authorEl.textContent = '';
+        authorEl.classList.add('hidden');
+        authorSep.classList.add('hidden');
+      }
       document.getElementById('modalAccessBadge').textContent = ACCESS_LABELS[article.access] || article.access;
       document.getElementById('modalEvidenceBadge').textContent = EVIDENCE_LABELS[article.evidence];
       document.getElementById('modalTitle').textContent = article.title;
@@ -844,27 +934,169 @@
       const legacy = document.getElementById('modalLegacy');
       const root = document.getElementById('modalDetail');
       const tabs = document.getElementById('modalTabs');
+      if (tabs) tabs.classList.add('!hidden');
       if (!d) {
         legacy.classList.remove('hidden');
         root.classList.add('hidden');
-        tabs.classList.add('hidden');
-        tabs.classList.remove('flex');
         root.innerHTML = '';
         return;
       }
-      const panels = {
-        overview: renderOverviewPanel(d),
-        detail: renderDetailPanel(d),
-        ref: renderRefPanel(d)
-      };
-      root.innerHTML = Object.keys(panels).map(k =>
-        `<div data-panel="${k}" class="space-y-7 hidden">${panels[k]}</div>`).join('');
       legacy.classList.add('hidden');
       root.classList.remove('hidden');
-      tabs.classList.remove('hidden');
-      tabs.classList.add('flex');
-      setModalTab('overview');
+      root.innerHTML = renderFullArticle(d);
+      document.getElementById('detailPane').scrollTop = 0;
       lucide.createIcons();
+    }
+
+    /* Flat Notion Style: 24px 아이콘 칼정렬, 카드 박스 완전 제거, 균일한 타이포그래피 */
+    function renderFullArticle(d) {
+      let h = '';
+      
+      // 저자 정보 상단 헤더 동기화
+      const authorMeta = (d.meta || []).find(m => /저자/.test(m.k));
+      const authorEl = document.getElementById('modalAuthor');
+      const authorSep = document.getElementById('modalAuthorSep');
+      if (authorEl && authorSep && authorMeta && authorMeta.v) {
+        authorEl.textContent = '저자: ' + authorMeta.v;
+        authorEl.classList.remove('hidden');
+        authorSep.classList.remove('hidden');
+      }
+
+      // 1. Executive Summary (플랫 콜아웃, 24px 아이콘, 단일 문단)
+      if (d.summary && d.summary.length) {
+        const fullSummaryText = d.summary
+          .map(it => (it.text || '').trim())
+          .filter(Boolean)
+          .join(' ');
+
+        h += `<div class="flat-callout-emerald">
+          <div class="flex items-center gap-3 font-extrabold text-emerald-900 dark:text-emerald-200 mb-3.5" style="font-size: 24px; letter-spacing: -0.025em;">
+            <i data-lucide="sparkles" class="w-6 h-6 shrink-0 text-emerald-600 dark:text-emerald-400"></i>
+            <span>Executive Summary</span>
+          </div>
+          <p class="article-p-justified">${esc(fullSummaryText)}</p>
+        </div>`;
+      }
+
+      // 2. Key Insights (플랫 리스트, 24px 아이콘, 번호 없음, 소제목 + 필자 판단 본문)
+      if (d.insights && d.insights.length) {
+        h += `<h3 class="article-sec-h"><i data-lucide="lightbulb" class="w-6 h-6 shrink-0 text-amber-500"></i><span>Key Insights</span></h3>`;
+        
+        const groupedInsights = [];
+        let currentGroup = null;
+
+        d.insights.forEach(ins => {
+          const title = (ins.title || '').trim();
+          const tag = (ins.tag || '').trim();
+          
+          if (title.includes('원문 근거') || title === '원문근거') return;
+          if ((title.includes('필자 판단') || title === '필자판단') && currentGroup) {
+            const texts = (ins.items || []).map(it => it.text).filter(Boolean);
+            if (texts.length) currentGroup.desc = texts.join(' ');
+            return;
+          }
+          
+          const rawItems = (ins.items || []).map(it => it.text).filter(Boolean).join(' ');
+          currentGroup = { tag: tag, title: title, desc: rawItems };
+          groupedInsights.push(currentGroup);
+        });
+
+        h += `<div class="space-y-5">` + groupedInsights.map(g => {
+          const tagBadge = g.tag ? `<span class="inline-block px-2.5 py-0.5 rounded text-xs font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 mr-2 align-middle">${esc(g.tag)}</span>` : '';
+          const descHtml = g.desc ? `<p class="article-p-justified pl-0.5" style="font-size: 17px; line-height: 1.75; text-align: justify; word-break: keep-all; letter-spacing: -0.015em; margin: 0;">${esc(g.desc)}</p>` : '';
+          
+          return `<div>
+            <h4 class="text-lg font-bold text-slate-900 dark:text-white leading-snug tracking-tight mb-1.5">
+              ${tagBadge}<span class="align-middle">${esc(g.title)}</span>
+            </h4>
+            ${descHtml}
+          </div>`;
+        }).join('') + `</div>`;
+      }
+
+      // 3. 주제별 상세 분석 (Key Insights 뒤 플랫 배치, 카드 테두리 삭제, 24px 아이콘)
+      if (d.topics && d.topics.length) {
+        h += `<h3 class="article-sec-h"><i data-lucide="layers" class="w-6 h-6 shrink-0 text-indigo-500"></i><span>Topic Analysis</span></h3>`;
+        h += `<div class="space-y-5">` + d.topics.map(t => {
+          const topicParagraph = (t.items || [])
+            .map(it => (it.text || '').trim())
+            .filter(Boolean)
+            .join(' ');
+
+          return `<div>
+            <h4 class="text-lg font-bold text-slate-900 dark:text-white leading-snug tracking-tight mb-1.5">
+              ${esc(t.title)}
+            </h4>
+            <p class="article-p-justified pl-0.5" style="font-size: 17px; line-height: 1.75; text-align: justify; word-break: keep-all; letter-spacing: -0.015em; margin: 0;">
+              ${esc(topicParagraph)}
+            </p>
+          </div>`;
+        }).join('') + `</div>`;
+      }
+
+      // Technical Views (플랫 관점 리스트, 24px 아이콘)
+      if (d.views && d.views.length) {
+        h += `<h3 class="article-sec-h"><i data-lucide="microscope" class="w-6 h-6 shrink-0 text-purple-500"></i><span>Technical Perspectives</span></h3>`;
+        h += `<div class="space-y-4">` + d.views.filter(it => it.text).map(it =>
+          `<p class="article-p-justified pl-3 border-l-2 border-purple-400 dark:border-purple-600">
+            ${esc(it.text)}
+          </p>`).join('') + `</div>`;
+      }
+
+      // Key Metrics (플랫 미니멀 테이블, 24px 아이콘)
+      if (d.metrics && d.metrics.rows && d.metrics.rows.length) {
+        h += `<h3 class="article-sec-h"><i data-lucide="bar-chart-3" class="w-6 h-6 shrink-0 text-sky-500"></i><span>Key Metrics</span></h3>`;
+        h += `<div class="my-4">${renderTable(d.metrics)}</div>`;
+      }
+
+// 6. Conclusion (플랫 퍼플 콜아웃, 24px 아이콘, 단일 문단)
+      if (d.conclusion && d.conclusion.length) {
+        const fullConclusionText = d.conclusion
+          .map(it => (it.text || '').trim())
+          .filter(Boolean)
+          .join(' ');
+
+        h += `<div class="flat-callout-purple">
+          <div class="flex items-center gap-3 font-extrabold text-purple-900 dark:text-purple-200 mb-3.5" style="font-size: 24px; letter-spacing: -0.025em;">
+            <i data-lucide="compass" class="w-6 h-6 shrink-0 text-purple-600 dark:text-purple-400"></i>
+            <span>Conclusion</span>
+          </div>
+          <p class="article-p-justified">${esc(fullConclusionText)}</p>
+        </div>`;
+      }
+
+      // 7. 한계 및 주의점 (플랫 앰버 콜아웃)
+      if (d.limits && d.limits.length) {
+        h += `<div class="flat-callout-amber">
+          <div class="flex items-center gap-3 font-extrabold text-amber-900 dark:text-amber-200 text-xl mb-3.5">
+            <i data-lucide="alert-triangle" class="w-6 h-6 shrink-0 text-amber-600 dark:text-amber-400"></i>
+            <span>Limitations & Considerations</span>
+          </div>
+          <ol class="space-y-2">` +
+            d.limits.map((x, i) => `<li class="article-p-justified flex items-start gap-2.5">
+              <span class="font-bold text-amber-700 dark:text-amber-400 shrink-0">${i + 1}.</span>
+              <span>${esc(x)}</span>
+            </li>`).join('') + `</ol>
+        </div>`;
+      }
+
+      // 8. 후속 확인 과제
+      if (d.todos && d.todos.length) {
+        h += `<h3 class="article-sec-h"><i data-lucide="list-checks" class="w-6 h-6 shrink-0 text-emerald-500"></i><span>Follow-up Actions</span></h3>`;
+        h += `<ul class="space-y-3">` +
+          d.todos.map(t => `<li class="article-p-justified flex items-center gap-3">
+            <i data-lucide="${t.done ? 'check-square' : 'square'}" class="w-5 h-5 shrink-0 ${t.done ? 'text-emerald-500' : 'text-slate-400'}"></i>
+            <span>${esc(t.text)}</span>
+          </li>`).join('') + `</ul>`;
+      }
+
+      // 9. Glossary (플랫 테이블)
+      if (d.glossary && d.glossary.rows && d.glossary.rows.length) {
+        h += `<h3 class="article-sec-h"><i data-lucide="book-open" class="w-6 h-6 shrink-0 text-sky-500"></i><span>Glossary</span></h3>`;
+        h += `<div class="my-4">${renderTable(d.glossary)}</div>`;
+      }
+
+      return h;
     }
 
     function setModalTab(name) {
@@ -1161,10 +1393,10 @@
 
       if (isBm) {
         label.textContent = '북마크 해제';
-        btn.classList.add('text-amber-500', 'border-amber-400');
+        btn.classList.add('text-amber-500', 'font-bold');
       } else {
         label.textContent = '북마크 추가';
-        btn.classList.remove('text-amber-500', 'border-amber-400');
+        btn.classList.remove('text-amber-500', 'font-bold');
       }
     }
 
