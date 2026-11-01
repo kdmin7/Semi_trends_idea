@@ -360,8 +360,10 @@
 
 ## 2026-11-01 — PC 부팅 시 자동 크롤링 연동, 무료 티어 키 전환, 상세 리포트 뷰어 가독성 대개편
 
-### 1. PC 부팅(로그온) 시 자동 크롤링 가드 구현
-- `scripts/run_on_startup.py` 생성: 부팅 직후 네트워크 안정화(10초 대기) 후, 마지막 크롤링 시각을 확인하여 설정 주기(기본 4시간) 이상 경과 시에만 파이프라인(`url_monitor_pipeline.py --check-latest`)을 호출하는 가드 로직 구현.
+### 1. PC 부팅(로그온) 시 자동 크롤링 & GitHub 자동 푸시 연동 (완전 무인 자동화)
+- `scripts/run_on_startup.py` 생성 및 고도화:
+  - 부팅 직후 네트워크 안정화(10초 대기) 후, 마지막 크롤링 시각을 확인하여 설정 주기(기본 4시간) 이상 경과 시에만 파이프라인(`url_monitor_pipeline.py --check-latest`)을 호출하는 가드 로직 구현.
+  - **신규 글 감지 시 GitHub 자동 동기화 (`auto_git_sync`) 연동**: 새 글이 크롤링되고 사이트가 빌드되면, 별도 수동 작업 없이 백그라운드에서 자동으로 `git add .` -> `git commit` -> `git push origin public:main`까지 완료하도록 파이프라인 결합.
 - `run_startup.bat`, `run_startup_silent.vbs`: 검은색 콘솔 창 없이 백그라운드 무창(Silent)으로 자동 실행되도록 래퍼 스크립트 작성.
 - Windows 사용자 시작프로그램 폴더(`shell:startup`)에 `UrlMonitorStartup.lnk` 바로가기를 등록하여 관리자 권한 없이도 전원 켤 때마다 자동 탐지되도록 연동 완료.
 - 향후 파이프라인에서 새 글 감지 시 `build_site.py`까지 원스톱으로 호출되도록 `trigger_catalog_rebuild()` 보완.
