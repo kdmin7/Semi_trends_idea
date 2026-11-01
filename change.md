@@ -357,3 +357,41 @@
 - 검산 중 발견한 원문 수치 불일치는 각 요약의 "한계 및 주의점"에 기록: 예) Vera Rubin 글의 Kimi K3 가중치 저장량 산술 표기, SMIC 글의 SRAM 밀도 단위(Mib vs Mbit) 혼용, 우주 데이터센터 글의 LCOC/PFLOP-hr 환산과 100TW/100GW 표기, CXMT 글의 용량 점유율(13%/11% 기준), DeepSeek V4 글의 "Day 26"과 날짜 구간 불일치.
 - 사이트 재빌드 결과 요약 병합 341/343건. 요약이 없는 글은 2건: `huawei-deepseek`(10-21), `amazons-trainium-takes-a-strike-at`(10-23).
 - 원문이 3,656바이트인 `anthropic-3q26-...`는 `STUB_MAX_BYTES` 미만이라 매번 미수집으로 잡히는 문제는 그대로.
+
+## 2026-11-01 — PC 부팅 시 자동 크롤링 연동, 무료 티어 키 전환, 상세 리포트 뷰어 가독성 대개편
+
+### 1. PC 부팅(로그온) 시 자동 크롤링 가드 구현
+- `scripts/run_on_startup.py` 생성: 부팅 직후 네트워크 안정화(10초 대기) 후, 마지막 크롤링 시각을 확인하여 설정 주기(기본 4시간) 이상 경과 시에만 파이프라인(`url_monitor_pipeline.py --check-latest`)을 호출하는 가드 로직 구현.
+- `run_startup.bat`, `run_startup_silent.vbs`: 검은색 콘솔 창 없이 백그라운드 무창(Silent)으로 자동 실행되도록 래퍼 스크립트 작성.
+- Windows 사용자 시작프로그램 폴더(`shell:startup`)에 `UrlMonitorStartup.lnk` 바로가기를 등록하여 관리자 권한 없이도 전원 켤 때마다 자동 탐지되도록 연동 완료.
+- 향후 파이프라인에서 새 글 감지 시 `build_site.py`까지 원스톱으로 호출되도록 `trigger_catalog_rebuild()` 보완.
+
+### 2. Gemini API 지출 한도(Spend Cap) 및 무료 티어 전환
+- 최신 글 요약 중 발생했던 `429 RESOURCE_EXHAUSTED` 원인 정밀 점검: Google Cloud 결제 계정에 묶인 월간 지출 한도(Monthly Spend Cap) 초과로 인한 차단 확인.
+- 이후 매일 자정마다 1,500회 쿼터가 자동 리필되는 완전 무료 티어(Free Tier) 전용 API Key로 `.env` 교체 완료 및 호출 승인 검증.
+
+### 3. 신규 6건 아티클 심층 요약 완료 및 중복 파일/레거시 스크립트 최적화
+- 미완료였던 최신 6건(Trainium, Open Models, SMIC N+3, GPU Debt, RL Systems, GPU Shortage)을 `gemini-3.8-flash`로 10대 항목 심층 요약 작성 완료.
+- `data/pipeline_history.json`에 최신 URL 6건 등록(312건 ➡️ 318건)하여 다음 부팅 시 반복 크롤링 차단.
+- 오늘 임시로 생성되었던 접두사 파일 `output/semianalysis/2026-11-01_*`(원문 6개) 및 `summary/2026-11-01_*`(요약 6개) 총 12개 중복 파일 안전 삭제.
+- 루트에 남아있던 과거 레거시 스크립트 3개(`monitor.py`, `summarizer.py`, `run_daily.py`)를 `archive/legacy_scripts/`로 격리 보관.
+
+### 4. 상세 리포트 뷰어 UI/UX 및 가독성 대개편 (Flat Notion Style)
+- **단일 스크롤 문서화 (One-page Stream)**: 기존 개요/상세/참고 3단 탭을 제거하고, Medium/Notion처럼 위에서 아래로 매끄럽게 읽히는 단일 아티클 뷰로 전환 (가독성 최적 너비 860px 중앙 배치).
+- **상단 일체형 헤더 정돈**:
+  - `[카테고리] [유료] · 발행일 · 저자`를 단 하나의 수평 라인으로 칼정렬.
+  - 버튼 네모 박스 테두리/배경 완전 제거 ➡️ **순수 텍스트 인라인 링크(`[아이콘] 텍스트 • [아이콘] 텍스트 • [아이콘] 텍스트`)**로 미니멀화.
+  - 버튼과 본문 `Executive Summary` 사이의 불필요하게 휑하던 상하 간격 대폭 축소.
+- **섹션 헤더 타이포그래피 통일**:
+  - 모든 대섹션 헤더(`Executive Summary`, `Key Insights`, `Topic Analysis`, `Key Metrics`, `Conclusion`, `Glossary`)를 **24px (800 볼드) + 24px 아이콘 + 영문 단독 표기**로 100% 동일 규격화.
+  - 답답하고 지저분하던 헤더 밑줄을 걷어내고, 여백 중심의 모던 플랫 스타일 적용.
+- **완벽한 줄간격 (행간 불일치 해결)**:
+  - `Executive Summary`: 문단 엔터 줄바꿈을 없애고, **단일 문단 양쪽 정렬(`text-align: justify; word-break: keep-all; line-height: 1.85;`)**을 적용하여 위아래 줄간격이 칼같이 일정하도록 정돈.
+  - `Key Insights` & `Topic Analysis`: 소제목 아래 불필요한 번호(1,2,3) 및 원문 근거 제외하고 핵심 시사점(필자 판단)만 소제목 바로 아래 배치(간격 6px). 문단 사이 간격은 일반 줄간격보다 살짝 넓은 **`20px (space-y-5)`** 단일 규격으로 통일.
+- **섹션 순서 재배치**:
+  - 스토리 흐름에 맞춰 `Key Insights` 바로 뒤로 `Topic Analysis`를 전진 배치하고, `Technical Perspectives` ➡️ `Key Metrics` ➡️ `Conclusion` 순으로 재정렬.
+
+### 5. 빌드 동기화 및 GitHub 저장소 배포
+- `build_site.py` 실행하여 `assets/data.js` 및 `docs/` 최신 반영 (고유 기사 343건).
+- `kdmin7/Semi_trends_idea` 저장소 `main` 브랜치에 안전 커밋 및 푸시 완료 (`fa747fc`).
+
