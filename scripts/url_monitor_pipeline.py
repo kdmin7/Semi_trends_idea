@@ -157,15 +157,22 @@ def sync_to_google_drive(raw_path: pathlib.Path, summary_path: pathlib.Path, yea
         print(f"    [!] Google Drive sync error: {e}", file=sys.stderr)
 
 def trigger_catalog_rebuild():
-    """웹 대시보드 색인 카탈로그(docs/index.json) 자동 갱신"""
+    """웹 대시보드 색인 카탈로그(docs/index.json) 및 index.html용 data.js 자동 갱신"""
     try:
         if str(BASE_DIR) not in sys.path:
             sys.path.insert(0, str(BASE_DIR))
         from scripts.build_catalog import build_catalog
         print("    [*] 웹 대시보드 색인 카탈로그(docs/index.json) 자동 갱신 중...")
         build_catalog()
+
+        # build_site.py 실행하여 index.html 및 assets/data.js 동기화
+        build_site_script = BASE_DIR / "build_site.py"
+        if build_site_script.exists():
+            import subprocess
+            subprocess.run([sys.executable, str(build_site_script)], cwd=str(BASE_DIR), check=True)
+            print("    [*] index.html 및 assets/data.js 동기화 완료.")
     except Exception as e:
-        print(f"    [!] Catalog rebuild error: {e}", file=sys.stderr)
+        print(f"    [!] Catalog/Site rebuild error: {e}", file=sys.stderr)
 
 def append_to_pending(title: str, summary: str, url: str):
     """이메일 발송 대기열(docs/pending.json)에 신규 항목 추가"""

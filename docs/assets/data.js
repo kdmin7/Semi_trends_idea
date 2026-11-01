@@ -2,23 +2,39 @@
 window.POSTS = [
   {
     "title": "Amazon’s Trainium Takes a Strike at the Training King",
-    "summary": "Trainium Best for Inference? But now good for Training too, Native Trainium PyTorch, High Quality CI, TorchTitan, GPU Impossible Profiler (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: AWS Trainium은 추론 영역(Anthropic의 프로덕션 서빙 및 RL rollout)에서 검증되었으나, 잦은 모델 구조 변경과 넓은 API 커버리지가 요구되는 연구/학습(Research Training) 영역에서는 기존 PyTorch/XLA 기반 스택의 제약으로 확산에 한계가 있었음.\n핵심 팩트: AWS는 PyTorch/XLA 종속성을 탈피하고 네이티브 PyTorch 백엔드인 TorchNeuron으로 전면 전환 중임. 8만 개 물리 코어를 투입한 대규모 자동화 CI 구축, TorchTitan 및 SGLang/vLLM 생태계 연동, 하드웨어 연계 초세밀 프로파일러(Neuron Explorer)를 전면에 배치함.\n영향도: Qwen3-32B 사전 학습(Trainium2 16개 칩 기준)에서 컴파일 모드 30.47% MFU(14,156 tokens/s)를 달성하고 FlexAttention 93% 패스율을 기록하는 등, CUDA 외 대안 가속기로서의 학습 범용성 및 개발 생산성이 대폭 개선되는 궤적을 보임.\n단서: 첫 스텝 컴파일 지연 시간(gpt-oss 20B 기준 27분 17초 소요)이 심각하여 연구 이터레이션의 주요 병목으로 남아 있으며, MoE 표준 통신 API(TokenSwitch) 미지원 및 유료 구간 콘텐츠 미수집 상태임.",
     "url": "https://newsletter.semianalysis.com/p/amazons-trainium-takes-a-strike-at",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-10-26T14:32:09.521485+00:00",
     "slug": "amazons-trainium-takes-a-strike-at",
     "paywalled": true,
-    "published_at": "2026-10-23T19:06:44.981Z"
+    "published_at": "2026-10-23T19:06:44.981Z",
+    "feed_summary": "Trainium Best for Inference? But now good for Training too, Native Trainium PyTorch, High Quality CI, TorchTitan, GPU Impossible Profiler (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "points": [
+      "[소프트웨어] PyTorch/XLA 탈피와 Native PyTorch(TorchNeuron)로의 전환",
+      "[인프라] 80,000코어 CI 플릿과 Top 100k+ 모델 대상 엄격한 품질 관리",
+      "[아키텍처] 하드웨어-소프트웨어 Co-design 기반의 초세밀 프로파일러(Neuron Explorer)"
+    ],
+    "takeaway": "AWS (Neuron 하드웨어/소프트웨어 사업부): 네이티브 PyTorch 전환과 대규모 CI 투자를 통해 최대 약점이었던 연구자 UX를 상당 부분 보완함. 약속한 컴파일 시간 2 orders of magnitude 단축 및 TokenSwitch 업스트림 표준 지원 완수가 향후 시장 점유율 확대를 결정지을 핵심 과제임.\n경쟁 가속기 제조사 (Nvidia, AMD): 하드웨어 Raw 스펙 외에 인트라-코어 가시성을 제공하는 프로파일러(Neuron Explorer 수준)의 필요성이 부각됨. AMD는 ROCm CI 품질 및 릴리스 검증 체계를 대폭 강화해야 하는 실질적 압박에 직면함.\n클라우드·AI 모델 개발사 (Anthropic, Tier-2 연구소 등): Anthropic의 실제 프로덕션 워크로드 적용 사례처럼, 인프라 비용 절감을 위해 학습 클러스터의 일부를 Trainium으로 다변화할 수 있는 소프트웨어적 실행 가능성이 입증됨.",
+    "has_detail": true
   },
   {
     "title": "The Huawei-DeepSeek Symbiosis",
-    "summary": "Huawei Ascend 950PR Deep dive & µbenchmarks, DSv4.1 Flash Analysis, DeepSeek support for Ascend, AICPU, Tilelang Ascend (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "summary": "배경: 화웨이는 칩의 실제 성능을 입증할 프런티어 AI 랩이 부족하고, 딥시크는 미국의 제재 등으로 연산 자원 확보가 제한되어 양사가 하드웨어(화웨이)와 모델 워크로드·커널 엔지니어링(딥시크)을 상호 교환하는 공생 관계를 형성함.\n핵심 팩트: 딥시크가 TileLang, DeepGEMM, DeepEP 등 6개 핵심 인프라 리포지토리에 Ascend 지원을 추가했으며, 화웨이 Ascend 950PR은 stock BF16 GEMM에서 연산 한계의 99.7%를 기록함.\n영향도: 아키텍처 수준의 공동 설계(L0C와 Vector UB 활용, KV 캐시 레이아웃 재배치, AICPU를 통한 D2H 오버헤드 완화)를 통해 중국 독자 생태계가 빠르게 성숙하고 있으나, 수율 이슈로 인한 이중 비닝(연산+메모리)과 x86 호환성 결여 등 파편화 문제가 상존함.\n단서: 본 보고서는 유료 미리보기 상태로 수집되어 후반부 생태계 분석 및 종합 결론 일부가 누락되어 있음.",
     "url": "https://newsletter.semianalysis.com/p/huawei-deepseek",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-10-26T14:32:09.521485+00:00",
     "slug": "huawei-deepseek",
     "paywalled": true,
-    "published_at": "2026-10-21T17:34:38.623Z"
+    "published_at": "2026-10-21T17:34:38.623Z",
+    "feed_summary": "Huawei Ascend 950PR Deep dive & µbenchmarks, DSv4.1 Flash Analysis, DeepSeek support for Ascend, AICPU, Tilelang Ascend (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "points": [
+      "[아키텍처] 불완전한 하드웨어 구조를 소프트웨어와 메모리 계층 우회로 극복",
+      "[반도체/공정] 결함 및 파라메트릭 저하 대응을 위한 연산·메모리 동시 비닝(Binning)",
+      "[소프트웨어] 초거대 스케일아웃에 최적화된 통신-연산 중첩 및 전용 런타임"
+    ],
+    "takeaway": "중국 반도체 생태계(화웨이 등): 취약한 하드웨어 수율과 패키징 한계를 아키텍처적 변칙(AICPU 내장) 및 최상위 AI 연구소의 커널 코디자인으로 일정 수준 상쇄하고 있음을 입증함.\n경쟁 가속기 제조사(NVIDIA 등): 순수 칩 성능에서는 여전히 1~2세대 앞서 있으나, 통신 오버랩 및 모델-하드웨어 밀착 최적화 영역에서 중국 내 대체재의 추격 속도가 예상보다 빠름을 경계해야 함.\n클라우드·서비스 사업자: 화웨이 생태계 도입 시 ARM 기반 전용 SuperPod 아키텍처에 강하게 종속되며, 기존 x86 인프라와의 소프트웨어 호환성(CANN, vLLM 빌드 등) 결함 해결에 추가 엔지니어링 리소스가 요구됨.",
+    "has_detail": true
   },
   {
     "title": "Datacenters 2027: The Year of Acceleration, +50GW in a Single Year",
@@ -4912,7 +4928,7 @@ window.POSTS = [
   },
   {
     "title": "The Great GPU Shortage – Rental Capacity – Launching our H100 1 Year Rental Price Index",
-    "summary": "배경: Anthropic의 Claude 4.6 Opus 및 Claude Code 출시로 인한 에이전트형 AI 수요 폭발. Anthropic의 ARR이 한 분기 만에 90억 달러에서 300억 달러 이상으로 급증함.\n핵심 팩트: H100 1년 대여 계약 가격이 2025년 10월 $1.70/hr에서 2026년 3월 $2.35/hr로 약 40% 급등함.\n영향도: 온디맨드(On-Demand) 용량은 모든 GPU 유형에서 매진되었으며, Blackwell(B200, B300) 공급은 2026년 8~9월분까지 이미 예약 완료됨.\n단서: 메모리(DRAM, NAND) 가격의 파라볼릭한 상승(전년 대비 4~5배)이 서버 가격 상승과 공급 제한을 가속화함.",
+    "summary": "배경: 원문은 Claude 4.6 Opus, Claude Code 등 멀티에이전트 워크로드의 확산과 오픈 모델(GLM, Kimi K2.5), 미디어 생성(Seedance, Nano Banana)으로 인한 토큰 수요 폭증이 GPU 공급 부족을 재점화했다고 기술함.\n핵심 팩트: 원문은 H100 1년 계약 렌탈 가격이 2025년 10월 $1.70/hr/GPU 저점에서 2026년 3월 $2.35/hr/GPU로 약 40% 급등했으며, 온디맨드 용량은 전 GPU 모델에 걸쳐 전량 소진(Sold out) 상태라고 밝힘.\n영향도: 1Q26 LPDDR5(~4배 YoY), DDR5(~5배 YoY) 등 메모리 가격 폭등으로 OEM이 AI 서버 가격을 부품 인상폭 이상으로 올렸고, 이에 따른 서버 조달 차질로 신규 공급이 지연되면서 렌탈 시장의 공급 압박이 가중됨.\n단서: GB300 램프업에 따른 토큰 공급 해소 여부, 실리콘 및 부품 공급 병목 지속 여부, AI Lab의 ARR 및 토큰 소비 확대 속도가 향후 렌탈 가격의 지속성을 결정짓는 핵심 변수임.",
     "url": "https://newsletter.semianalysis.com/p/the-great-gpu-shortage-rental-capacity",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-10-02T15:49:45.964500+00:00",
@@ -4921,11 +4937,11 @@ window.POSTS = [
     "published_at": "2026-04-02T04:25:57.274Z",
     "feed_summary": "H100 Rental Prices up 40%, GPU Rental Pricing Dashboard Launch, Compute Rental Market Structure, Will Rental Prices keep going up?",
     "points": [
-      "[시장] GPU 렌탈 가격의 '역주행'과 가치 재평가",
-      "[소프트웨어] 에이전트형 AI(Claude Code)가 촉발한 토큰 소비의 비가역성",
-      "[비즈니스] Neocloud의 시장 지배력 강화와 구조적 변화"
+      "[비즈니스] GPU 감가상각 및 가치 하락 가설의 붕괴와 구형 가속기 수명 연장",
+      "[시장] 공급망 상류의 메모리 가격 폭등이 유발한 렌탈 공급 지연의 피드백 루프",
+      "[소프트웨어] 에이전트 워크로드 확산이 견인하는 비탄력적 컴퓨팅 수요 구조"
     ],
-    "takeaway": "반도체 기업 (NVIDIA/AMD): 공급 부족이 가격 상승을 지지하며 강력한 마진 유지 가능.\nNeocloud (CoreWeave 등): 자산 가치 상승 및 계약 갱신 시 마진 확대 수혜. 시장의 과잉 공급 우려와 달리 ROIC 개선 전망.\nAI Labs (Anthropic 등): 컴퓨팅 자원 확보가 곧 경쟁력이자 생존 요건. 장기 오프테이크를 통한 확정 물량 확보에 사활.\n메모리 제조사: AI 서버향 수요가 가격 결정권을 쥐고 있으며, 2026년 1분기 급격한 수익성 개선 예상.",
+    "takeaway": "반도체·부품 기업 (메모리, TSMC 등): 메모리(HBM, LPDDR5, DDR5) 및 선단 공정 웨이퍼 수급 타이트가 이어지며 부품 공급자의 가격 결정력이 당분간 강력하게 유지될 것임.\n클라우드·인프라 사업자 (Neocloud & Hyperscaler): 신규 용량 증설 비용(OEM 서버 가격)이 상승했으나 기존 기배치된 H100/H200 자산의 감가상각 종료 시점 연장 및 렌탈 단가 재상승으로 단기 영업마진 및 ROIC 확대가 가능함.\nAI 스타트업 및 서비스 개발사: 온디맨드 인스턴스 고갈과 렌탈 단가 상승, 사전 지불금(20%+) 요구로 인해 컴퓨팅 조달 CAPEX/OPEX 부담이 급증하므로, 효율적인 모델 압축 및 워크로드 분산 최적화가 필수적임.",
     "has_detail": true
   },
   {
@@ -5783,7 +5799,7 @@ window.POSTS = [
   },
   {
     "title": "Are Open Models Catching Up?",
-    "summary": "핵심 현상: 오픈 소스 모델이 폐쇄형(Frontier) 모델의 성능을 따라잡는 데 걸리는 시간이 세대마다 절반으로 단축되고 있음.\n시대 구분: LLM 역사를 Early Scaling(2022-24), Reasoning(2024-25), Agentic(2025-현재)의 3단계로 정의하고 각 시대별 벤치마크로 격차를 측정함.\n주요 데이터: Era 1에서 격차 해소에 21개월(Llama-3.1 기준)이 걸렸으나, Era 3에서는 약 5~6개월(Kimi K2.6, GLM-5.2 기준)로 단축됨.\n영향도: 모델 계층의 범용화(Commoditization) 우려가 커지고 있으며, 이는 프론티어 랩(OpenAI, Anthropic 등)의 마진 구조에 위협 요소임.\n단서: 벤치마크 점수가 실제 업무 효율과 완전히 일치하지는 않으며, 프론티어 랩은 모델 자체보다 '하네스(Harness)'와 제품화(Claude Code 등)로 차별화를 시도 중임.",
+    "summary": "배경: GLM 5.3, Kimi K3 등 오픈소스 AI가 실제 코딩 및 에이전트 작업에서 상용 프론티어 수준에 도달하며, 프론티어 랩 마진 붕괴 및 모델 계층의 상품화(Commoditization) 우려(FUD)가 대두됨.\n핵심 팩트: LLM 진화 3개 시대(초기 스케일링, 추론, 에이전틱) 분석 결과, 오픈소스 모델이 프론티어 폐쇄형 모델의 초기 성능을 따라잡는 기간이 세대마다 절반으로 단축됨(13개월 → 8.5개월 → 4.8~6개월).\n영향도: 오픈소스 추격 속도 가속화에도 불구하고, 프론티어 랩(OpenAI, Anthropic)은 출시 주기를 51일로 대폭 압축하고 하네스(Harness) 결합 제품화(Claude Code 등)를 통해 해자를 유지하려 시도 중임.\n단서: 벤치마크 점수 수렴이 실제 업무 성능 일치를 의미하지 않으며, 공개 벤치마크에 맞춘 강화학습(RL) 오버피팅과 안전성 평가 기간 차이라는 변수가 존재함.",
     "url": "https://newsletter.semianalysis.com/p/are-open-models-catching-up",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6040,7 +6056,7 @@ window.POSTS = [
   },
   {
     "title": "Nvidia GPU Debt Backstop Unleashes the AI Project Trinity: Capital, Offtake and Datacenters",
-    "summary": "배경: 원문은 AI 구축이 주로 하이퍼스케일러 현금흐름으로 충당되다가 Oracle, Meta, 이어 Google까지 부채로 이동했다고 서술. 병목이 2025년 데이터센터 용량, 2026년 초 칩 생산을 거쳐 이제 자금 조달이라고 봄.\n핵심 팩트: 원문은 AI 부채가 2029년까지 7T 달러 초과(약 $7.1T)에 이르러 미국 모기지 담보 시장(약 $13T) 다음의 자산담보 시장이 되고, 2024~2029 누적 AI Capex가 약 $11.1T라고 추정. Nvidia가 Neocloud의 GPU 임대 오프테이크를 take-or-pay 최소 매출 보장(백스톱)으로 지원하기 시작했다고 서술.\n영향도: 원문은 백스톱이 대출자에게 Nvidia 신용(AA/Aa2)을 제공해 \"Capital, Offtake, Datacenter\" 삼각(Trinity)을 맞추게 하고, Nvidia의 목표는 시장 접근 확대라고 봄.\n단서: 백스톱 조건은 Neocloud별로 협상되며 원문의 곡선은 \"낮은 쪽\"의 예시. 발표된 거래는 모두 아시아·태평양 지역.",
+    "summary": "배경: AI 클러스터 구축 투자가 하이퍼스케일러의 자체 현금흐름 기반에서 부채(Debt Financing) 기반으로 급격히 전환되고 있으며, 자본 조달을 위해 장기 오프테이크(Offtake) 계약이 필수가 됨.\n핵심 팩트: 하이퍼스케일러의 5년 지급보증(Take-or-pay) 역량이 한계에 도달하자, Nvidia가 Neocloud를 대상으로 6년 단위 최소 매출 보장(Backstop) 및 초과 수익 공유(Revenue Share) 구조를 직접 제공하기 시작함.\n영향도: 신용도가 취약한 Neocloud가 Nvidia의 투자적격등급(AA/Aa2)을 레버리지 삼아 70~80% LTV 조건의 부채 조달을 실행할 수 있게 되며, 1년 이하 단기 임대 공급이 활성화됨.\n단서: 백스톱 가격은 원리금 상환(DSCR 1.3x 이상)에 맞춘 바닥 가격(6년 평균 ~$2.36/hr 수준 예시)으로 설계되어, Neocloud가 실제 백스톱을 발동할 경우 프로젝트 IRR은 0% 이하(마이너스)로 수렴함.",
     "url": "https://newsletter.semianalysis.com/p/nvidia-gpu-debt-backstop-unleashes",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6204,7 +6220,7 @@ window.POSTS = [
   },
   {
     "title": "RL Systems Mind the Gap: Matching Trainer and Generator Throughput",
-    "summary": "배경: 원문은 코딩 어시스턴트 시장이 상위 6개 업체 기준 ARR $30B+이며 연말까지 $100B를 넘을 전망이라고 서술. 에이전트 코딩 능력은 사전학습만이 아니라 RL이 끌어내며 Claude Opus 4.8이 SWE-bench Pro 69.2%, Terminal-Bench 2.1 74.6%라고 인용.\n핵심 팩트: 원문은 RL 시스템 효율을 \"트레이너 소비 속도와 제너레이터 생산 속도를 맞추는 문제\"로 정식화하고, 오픈소스 RL 프레임워크로 오픈 모델을 학습한 4개 사례(Prime RL, verl, slime)에서 모두 제너레이터가 병목인 \"generation-bound\" 시스템이라고 관찰.\n영향도: 원문은 PipelineRL식 비동기 학습과 정책 노후도(policy staleness) 한도, 오버샘플링, 조기 가지치기, 부분 롤아웃, 분리 서빙이 큐 상태를 좌우한다고 봄.\n단서: 사례 4건은 모두 Qwen3 235B 또는 GLM-5 계열의 특정 구성이고, TCO 비교는 수집되지 않음.",
+    "summary": "배경: AI 코딩 에이전트의 능력 도출을 위해 사전 학습(Pre-training) 이후 강화학습(RL, 특히 GRPO 계열) 후학습 스케일링이 핵심으로 부상했으나, 엄청난 연산 비용으로 인해 시스템 효율성 극대화가 필수 과제가 됨.\n핵심 팩트: 실측 실험 결과, 실제 RL 훈련 클러스터는 전형적인 '생성 병목(Generation-bound)' 현상을 겪으며 트레이너 GPU가 30%~74%의 시간 동안 샘플 생성을 대기하며 유휴(Idle) 상태에 빠짐.\n영향도: LLM 추론(긴 CoT 추론, KV 캐시 점유) 및 샌드박스 런타임 레이턴시와 테일 레이턴시(Tail latency)가 전체 훈련 처리량을 좌우하므로, PD 분리(Prefill-Decode Disaggregation), 비동기 파이프라인(PipelineRL), 부분 롤아웃(Partial Rollout) 등 추론 및 환경 오케스트레이션 최적화가 전체 인프라 TCO를 결정함.\n단서: 원문은 유료 미리보기 상태로 중단되어 기사 후반부의 구체적인 'RL Training TCO Analysis' 및 상용 솔루션(Thinking Machines의 Tinker)과의 정량적 비용 비교 데이터가 누락되어 있음.",
     "url": "https://newsletter.semianalysis.com/p/rl-systems-mind-the-gap-matching",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
@@ -6228,7 +6244,7 @@ window.POSTS = [
   },
   {
     "title": "Is SMIC N+3’s Metal Pitch Smaller than Intel 18A’s?",
-    "summary": "배경: 원문은 SemiAnalysis가 오리건에 구축한 분해·평가 연구소 STEEL의 첫 공개 보고서로, Huawei Mate 80 Pro의 HiSilicon Kirin 9030(SMIC N+3)을 TSMC N6 기반 MediaTek Helio G99와 비교했다고 서술.\n핵심 팩트: 원문은 N+3의 최소 금속 피치(M0)가 32.5 nm로 Panther Lake의 Intel 18A(36 nm)보다 약 10% 촘촘하나 \"불완전하고 취사선택한 지표\"라고 봄. N+3의 트랜지스터 밀도 113.4 MTr/mm²는 TSMC N6(107.7)를 약간 넘지만 DUV 다중 패터닝과 DTCO의 대가로 복잡도·효율·공정 제어가 불리하다고 서술.\n영향도: 원문은 Kirin 9030 Pro 성능이 3년 전 안드로이드 플래그십 수준이고 효율 격차는 더 크다고 평가. Huawei의 로드맵은 평면 스케일링이 아니라 3D 적층(LogicFolding, τ 스케일링)으로 이동한다고 서술.\n단서: 단면 소수 샘플에서 측정한 수치로 절대값은 근사이며, 원문도 \"상대 격차가 중요하다\"고 밝힘. 미래 노드(N+4, N+5) 수치는 SemiAnalysis의 이론적 추정.",
+    "summary": "배경: 미국 주도 수출 통제로 EUV 장비 반입이 차단된 상황에서, SMIC가 DUV 멀티패터닝 기반의 3세대 7nm급 공정인 'N+3'을 화웨이 Kirin 9030 Pro SoC에 적용하여 양산함.\n핵심 팩트: TEM 단면 분석 결과 SMIC N+3의 M0 피치는 32.5nm로 Intel 18A(Panther Lake, 36nm)보다 타이트하며, Bohr 로직 밀도는 113.4 MTr/mm²로 TSMC N6(107.7 MTr/mm²)를 소폭 상회함.\n영향도: EUV 부재를 SAQP와 광범위한 DTCO(COAG, SDB, Fin Depopulation, 3:2 M1 비율)로 극복했으나 마스크 수 증가, 오버레이 제어 및 공정 복잡성 급증으로 성숙도·비용에서 심각한 페널티를 지님. 실측 성능 및 효율은 3년 전 구형 플래그십(약 Cortex-X2/Snapdragon 8+ Gen 1급) 수준에 머무름.\n단서: 화웨이는 평면 미세화 한계를 타개하기 위해 ISCAS 2026에서 'τ(Tau) 스케일링 법칙'을 제시하고 활성 로직을 3D 적층하는 'LogicFolding' 로드맵(2030년 215 MTr/mm², 2031년 295 MTr/mm²)으로 선회 중임.",
     "url": "https://newsletter.semianalysis.com/p/steel-smic-n3-teardown",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",

@@ -18,6 +18,8 @@ __pycache__/
 
 # 4. Logs & Temp
 *.log
+logs/
+data/state/
 .system_generated/
 
 # 5. Claude Code 로컬 설정/락
