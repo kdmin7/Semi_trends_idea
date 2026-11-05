@@ -92,6 +92,33 @@ def firecrawl_map(site_url: str, api_key: str, limit: int = 25) -> list[str]:
         print(f"[!] Firecrawl map error: {e}", file=sys.stderr)
         return []
 
+def fetch_latest_links(site_url: str, firecrawl_key: str, limit: int = 25) -> list[str]:
+    """Substack 공식 아카이브 API(시간순 정렬)와 Firecrawl map을 결합하여 실제 최신 발행 링크를 반환합니다."""
+    links = []
+    # 1. Substack 공식 아카이브 API (시간순 최신 글 100% 보장)
+    try:
+        archive_url = f"{site_url.rstrip('/')}/api/v1/archive?sort=new&limit={limit}"
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
+        req = urllib.request.Request(archive_url, headers=headers)
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            for item in data:
+                canonical = item.get("canonical_url")
+                if canonical:
+                    links.append(canonical)
+                elif item.get("slug"):
+                    links.append(f"{site_url.rstrip('/')}/p/{item['slug']}")
+    except Exception as e:
+        print(f"[!] Substack archive API check failed: {e}", file=sys.stderr)
+
+    # 2. Firecrawl Map (보조 탐색)
+    fc_links = firecrawl_map(site_url, firecrawl_key, limit=limit)
+    for l in fc_links:
+        if l not in links:
+            links.append(l)
+
+    return links
+
 def firecrawl_scrape(url: str, api_key: str):
     """Firecrawl Scrape API를 호출하여 대상 URL의 마크다운 본문을 추출합니다."""
     endpoint = "https://api.firecrawl.dev/v1/scrape"
@@ -322,7 +349,7 @@ def main():
         sys.exit(1)
 
     system_prompt = PROMPT_FILE.read_text(encoding="utf-8")
-    gemini_client = genai.Client(api_key=gemini_key)
+    gemini_client = genai.Client(api_key=gemini_key, http_options=types.HttpOptions(timeout=90000))
     history = load_history()
 
     args = sys.argv[1:]
@@ -331,8 +358,8 @@ def main():
     if not args or "--check-latest" in args:
         print("=== [SemiAnalysis 데일리 자동 모니터링 시작] ===")
         print(f"[*] 기존 처리 완료 아티클 수: {len(history)}건")
-        print("[*] Firecrawl을 통해 최신 발행 목록 확인 중...")
-        latest_links = firecrawl_map("https://newsletter.semianalysis.com", firecrawl_key, limit=20)
+        print("[*] Substack 아카이브 및 Firecrawl을 통해 최신 발행 목록 확인 중...")
+        latest_links = fetch_latest_links("https://newsletter.semianalysis.com", firecrawl_key, limit=25)
         
         new_links = [l for l in latest_links if l not in history]
         if not new_links:
