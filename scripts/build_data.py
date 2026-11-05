@@ -47,13 +47,20 @@ def parse_summary_file(path):
 
     takeaway = [b for b in _bullets(_section(text, "Conclusion")) if b]
 
+    m_date = re.search(r"(\d{4}-\d{2}-\d{2})", os.path.basename(path))
+    file_date = m_date.group(1) if m_date else None
+    t_match = re.search(r"^#\s*(?:\[[^\]]*\]\s*)?(.+)$", text, re.M)
+    title_str = t_match.group(1).strip() if t_match else ""
+
     return {
         "summary": "\n".join(execsum),
         "points": points[:MAX_POINTS],
         "takeaway": "\n".join(takeaway),
         "_detail": parse_detail(text),
         "_head": text[:3000],
-        "_title": (re.search(r"^#\s*(?:\[[^\]]*\]\s*)?(.+)$", text, re.M) or [None, ""])[1],
+        "_title": title_str,
+        "_path": path,
+        "_date": file_date,
     }
 
 
@@ -170,18 +177,26 @@ def parse_detail(text):
 
 
 def load_summaries():
-    """slug / 정규화 제목 → 파싱 결과. 헤더의 /p/<slug> URL을 우선, 없으면 제목으로 매칭."""
+    """slug / 정규화 제목 → 파싱 결과. 헤더의 /p/<slug> URL을 우선, 없으면 제목으로 매칭.
+    동일 slug가 여러 개일 경우 가장 최신 날짜(_date)의 요약이 우선권을 가짐.
+    """
     by_slug, by_title = {}, {}
     for path in storage.summary_files():
         path = str(path)
         info = parse_summary_file(path)
         m = re.search(r"/p/([^\s|)>\]/?#]+)", info["_head"])
         if m:
-            by_slug[m.group(1)] = info
+            slug = m.group(1)
+            existing = by_slug.get(slug)
+            if not existing or (info.get("_date") or "") >= (existing.get("_date") or ""):
+                by_slug[slug] = info
         stem = re.sub(r"^(\d+_)?\d{4}-\d{2}-\d{2}_", "", os.path.basename(path)).replace("_summary.md", "").replace("_", " ")
         for t in (info["_title"], stem):
             if t:
-                by_title.setdefault(_norm(t), info)
+                norm_t = _norm(t)
+                existing = by_title.get(norm_t)
+                if not existing or (info.get("_date") or "") >= (existing.get("_date") or ""):
+                    by_title[norm_t] = info
     return by_slug, by_title
 
 
@@ -207,6 +222,12 @@ def merge_summaries(results):
             r["points"] = info["points"]
         if info["takeaway"] and not r.get("takeaway"):
             r["takeaway"] = info["takeaway"]
+        if info.get("_title"):
+            r["title"] = info["_title"]
+        if info.get("_date"):
+            cur_date = str(r.get("published_at", ""))[:10]
+            if not cur_date or info["_date"] > cur_date:
+                r["published_at"] = f"{info['_date']}T00:00:00.000Z" 
         if info.get("_detail"):
             payload = json.dumps(info["_detail"], ensure_ascii=False, separators=(",", ":"))
             with open(os.path.join(DETAIL_DIR, r["slug"] + ".js"), "w", encoding="utf-8") as f:

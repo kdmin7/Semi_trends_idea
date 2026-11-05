@@ -287,8 +287,9 @@ scraped_at: {datetime.now(timezone.utc).isoformat()}
         print(f"    [X] 요약 생성 실패: {raw_filename}")
         return False
 
-    summary_path.write_text(summary_text, encoding="utf-8")
-    print(f"    4. 심층 요약문 저장 완료: {summary_filename} ({len(summary_text):,} chars)")
+    summary_content = f"<!-- source: {target_url} -->\n" + summary_text
+    summary_path.write_text(summary_content, encoding="utf-8")
+    print(f"    4. 심층 요약문 저장 완료: {summary_filename} ({len(summary_content):,} chars)")
 
     # 4. Google Drive 자동 동기화
     print("    5. Google Drive로 실시간 백업 중...")

@@ -36,3 +36,4 @@ docs/assets/summaries/
 # 8. 요약 md 카탈로그 동기화 산출물 (공개 Pages로 요약 원문이 노출되지 않도록 제외)
 docs/summaries/
 docs/index.json
+docs/assets/catalog.js

@@ -8,7 +8,7 @@ window.POSTS = [
     "detected_at": "2026-10-26T14:32:09.521485+00:00",
     "slug": "amazons-trainium-takes-a-strike-at",
     "paywalled": true,
-    "published_at": "2026-10-23T19:06:44.981Z",
+    "published_at": "2026-11-01T00:00:00.000Z",
     "feed_summary": "Trainium Best for Inference? But now good for Training too, Native Trainium PyTorch, High Quality CI, TorchTitan, GPU Impossible Profiler (상세 본문은 유료 구독 필요, 원문 확인 필요)",
     "points": [
       "[소프트웨어] PyTorch/XLA 탈피와 Native PyTorch(TorchNeuron)로의 전환",
@@ -55,21 +55,21 @@ window.POSTS = [
     "has_detail": true
   },
   {
-    "title": "ASML Is Building a Hybrid Bonding Tool!",
-    "summary": "배경: ASML이 하이브리드 본딩(HB) 장비 개발을 공식 발표하지는 않았으나, 특허 출원·언론 보도·자사 로드맵이 모두 이를 가리킨다는 것이 원문의 판단임.\n핵심 팩트: 원문은 ASML이 die-to-wafer(D2W) HB 장비부터 시작할 것으로 봄. 2022년 12월~2024년 11월에 본딩 특허 27개 패밀리를 출원했고 대부분 D2W임. 장비 구조는 개별 die를 독립 홀더에 실어 트랙 위로 이동시키는 방식으로, 기존 본더(본드 헤드가 die를 집어 배치)와 다름.\n영향도: 원문은 정렬 정확도(alignment accuracy)와 파티클 제어에서 ASML이 우위를 가질 수 있다고 보며, 첨단 로직이 첫 도입처이고 Besi에는 부정적(bad news)이라고 봄.\n단서: ASML이 공식 발표한 장비가 아님. 근거는 특허·보도·로드맵 기반의 추정이며, 해결 과제(feed-forward 계측, die-to-wafer 접촉, 비본딩 장비의 트랙 대응, 루프 전체 청정도)는 유료 구간에 있어 이번 수집에서 확인되지 않음.",
+    "title": "ASML Is Building a Hybrid Bonding Tool, Sending More Chills to Besi",
+    "summary": "핵심 팩트: ASML이 공식 발표는 없었으나, 특허 출원(2022.12~2024.11 사이 27개 제품군) 및 공급망 정황을 통해 Die-to-Wafer(D2W) 하이브리드 본딩(HB) 장비를 개발 중임이 확인됨.\n기술적 차별점: 기존 Besi 방식(본드 헤드 픽앤플레이스)과 달리, 독립적인 셔틀이 트랙(Track)을 따라 이동하며 각 공정 스테이션을 통과하는 '트랙 기반 설계'를 채택함.\n영향도: 노광 장비(Scanner)와 본딩 장비 간의 데이터 연동(좌표계 공유)을 통해 후속 노광 공정의 속도와 정밀도를 높이는 수직 계열화 전략을 구사함.\n단서: 현재 D2W HB 시장의 지배적 사업자인 Besi에게 위협적이며, 특히 정밀도 요구치가 높은 로직(Logic) 분야부터 침투할 것으로 예상됨.",
     "url": "https://newsletter.semianalysis.com/p/asml-is-building-a-hybrid-bonding",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-10-18T14:13:37.616987+00:00",
     "slug": "asml-is-building-a-hybrid-bonding",
     "paywalled": true,
-    "published_at": "2026-10-15T19:27:20.873Z",
+    "published_at": "2026-11-05T00:00:00.000Z",
     "feed_summary": "ASML is building a hybrid bonding tool! The company has not announced anything yet, but its patent filings, a news report and its own roadmap all suggest so. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
     "points": [
-      "[아키텍처] 트랙 기반 D2W 본더: die가 홀더 위에 머무는 구조",
-      "[비즈니스] 수직 통합의 연장선이자 스캐너와의 번들 판매 구도",
-      "[시장] 첨단 로직 선도입, Besi에 불리"
+      "[아키텍처] 트랙 기반의 독립 셔틀 시스템 도입",
+      "[비즈니스] 노광-본딩 데이터 연동을 통한 수직 계열화",
+      "[시장] Besi의 독점 체제 균열 및 로직 시장 우선 타격"
     ],
-    "takeaway": "ASML: 장비 발표 전이므로 로드맵·특허 추적이 선행 지표이며, 본더·스캐너 연동이 핵심 차별화 포인트로 예상됨.\nBesi 등 기존 HB 장비 공급사: 원문은 로직 중심 사업 구조라 직접적 위협이라고 봄(상세 분석은 유료 구간).\n파운드리(TSMC, Intel 등 첨단 로직): 오버레이 요구가 4.5um 피치로 강화되는 만큼 정렬 정확도 우위 장비에 관심이 높을 것으로 원문이 예상함.\n메모리(HBM): 원문은 D2W HB 도입을 2029년 이후로 보아 HB 장비 수요가 단기에 크지 않다고 판단함.",
+    "takeaway": "ASML: 후공정 진출을 통해 노광 장비 점유율을 방어하고 신규 매출원을 확보함.\nBesi: 로직 HB 시장의 독점적 지위 위협, HBM HB 도입 지연과 겹쳐 중장기적 성장 동력 우려 발생.\nTSMC/Intel: ASML과의 협력을 통해 SoIC 등 첨단 패키징의 정밀도와 처리량을 개선할 기회.\n메모리 업체: HBM용 HB 도입 시점이 2029년 이후로 전망됨에 따라 기존 본딩 기술 고도화에 집중할 것으로 보임.",
     "has_detail": true
   },
   {
@@ -433,7 +433,7 @@ window.POSTS = [
     "has_detail": true
   },
   {
-    "title": "AMD vs NVIDIA Inference Benchmark: Who Wins? - Performance &amp; Cost Per Million Tokens",
+    "title": "AMD vs NVIDIA Inference Benchmark: Who Wins? - Performance & Cost Per Million Tokens",
     "summary": "배경: AMD 인공지능(AI) 가속기의 TCO 기반 추론 성능 우위 주장을 검증하기 위해 6개월간 단일 노드 기반 실측 벤치마크를 수행함.\n핵심 팩트: 장비 직접 보유(자체 구축) 시 워크로드 및 지연시간 요건에 따라 AMD(대형 dense 모델, 고지연 구간)와 NVIDIA(프리필 중심, 저지연 구간, TRT-LLM 적용 시)의 우위가 갈리나, 6개월 미만 단기 렌탈 시장에서는 Neocloud 공급 부족으로 NVIDIA가 가격 대비 성능(perf/$)에서 항상 우세함.\n영향도: MI325X의 출시 지연(2025년 2분기 본격 양산)으로 시장 선점 기회를 놓치고 고객들이 B200으로 직행하는 양상이며, ROCm의 CI 커버리지 및 수치 정확도 결함(테스트 모델 25% 실패)이 소프트웨어 채택을 저해함.\n단서: 본 평가는 단일 노드(Single Node)에 국한되었으며, 대규모 서빙의 핵심인 분리형 프리필(Disaggregated Prefill) 등 멀티 노드 기술은 AMD 오픈 스택에 미구현된 상태임. 유료 구간 진입 전 종료되어 상세 TCO 입력 변수는 제한적으로 제시됨.",
     "url": "https://newsletter.semianalysis.com/p/amd-vs-nvidia-inference-benchmark-who-wins-performance-cost-per-million-tokens",
     "source": "https://semianalysis.com/",
@@ -3796,20 +3796,20 @@ window.POSTS = [
   },
   {
     "title": "TSMC Wants To Make Intel Dependent On External Manufacturing - Wafer Supply Agreement Insights For AMD, Apple, Broadcom, Intel, MediaTek, Nvidia, and Qualcomm",
-    "summary": "배경: Pat Gelsinger의 대만 방문 및 Intel-TSMC 파운드리 계약 루머(AMD 물량 잠식설, Intel 신규 공정 실패설 등)가 확산되는 국면에서 주요 팹리스 고객사들의 웨이퍼 공급 계약(선급금, 공정 협력 등) 실태를 분석함.\n핵심 팩트: TSMC 고객 등급은 고착화되어 있음. Tier-1인 Apple, 충성 고객인 AMD/MediaTek은 대규모 선급금(Prepayment) 없이 물량을 배정받는 반면, Samsung과 TSMC를 오가는 기회주의적 벤더(Nvidia, Qualcomm)는 조 단위의 선급금 및 장기 구매 의무(LTA)를 강제받음.\n영향도: Intel은 Bob Swan 재임 시절 이미 N6, N5/4, N3 공정 계약을 체결함. TSMC는 Intel 제품 설계팀을 TSMC 공정 생태계에 종속시켜 Intel의 내부 제조(IDM) 경쟁력을 약화시키려는 장기 전략을 전개 중임.\n단서: 수집본은 유료 미리보기로, 인텔의 2023~2024년 구체적 슬롯 규모와 외주 배정 제품 목록 등 핵심 세부 분석은 유료 섹션에 포함되어 누락됨.",
+    "summary": "배경: Pat Gelsinger Intel CEO의 대만 방문을 전후하여 Intel이 AMD의 캐파를 빼앗으려 한다거나 공정 실패로 TSMC에 매달린다는 등 공급 계약에 관한 루머가 시장에 확산됨.\n핵심 팩트: TSMC는 모든 고객사(Apple, AMD, MediaTek, Nvidia, Qualcomm, Broadcom, Intel)에 동일한 조건을 제공하지 않으며, 전속성·볼륨·협력 수준에 따라 선수금 요구 여부 및 PDK 맞춤화 수준을 차등화함.\n영향도: Nvidia와 Qualcomm은 TSMC와 Samsung 파운드리를 저울질하며 기회주의적 전략을 취해 대규모 선수금(TSMC Q3 2021 기준 고객사 선수금 38억 2천만 달러)을 치르고 있는 반면, Apple, AMD, MediaTek은 전속성에 기반해 무선수금 및 선행 진입 혜택을 향유함.\n단서: TSMC는 Bob Swan 시절 맺은 N6, N5/4, N3 바인딩 계약을 통해 Intel 내부 설계팀을 TSMC 공정에 길들여 장기적으로 Intel 내부 제조(Fab)를 무력화하려는 전략적 노림수를 가지고 있음.",
     "url": "https://newsletter.semianalysis.com/p/tsmc-the-drug-dealer-is-trying-to",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-10-02T16:04:24.639489+00:00",
     "slug": "tsmc-the-drug-dealer-is-trying-to",
     "paywalled": true,
-    "published_at": "2021-12-22T19:01:16.647Z",
+    "published_at": "2021-12-23T00:00:00.000Z",
     "feed_summary": "Authors note: This has been reprinted, the original had a crude analogy related to drugs and addiction embedded throughout. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
     "points": [
-      "[비즈니스] TSMC의 차등적 공급 계약 및 선급금(Prepayment) 구조",
-      "[아키텍처] 공정 우위가 플래그십 AP 아키텍처 경쟁 구도를 역전",
-      "[비즈니스] Intel의 \"외주를 통한 공정 종속화\"를 노리는 TSMC의 노림수"
+      "[비즈니스] TSMC의 차등적 고객 관리와 무선수금 티어의 형성",
+      "[시장] 삼성-TSMC 양면 베팅의 대가: 선수금 부담과 공정 리스크",
+      "[전략] TSMC의 장기적 노림수: Intel 내부 팹 무력화"
     ],
-    "takeaway": "파운드리(TSMC/Samsung): TSMC는 선단 공정 지배력을 바탕으로 팹리스 고객군을 등급화하여 Capex 리스크를 분산함. Samsung은 원가 경쟁력에도 불구하고 PPA 열세로 인해 플래그십 고객(Qualcomm) 이탈을 방어해야 하는 과제에 직면함.\n종합 반도체 기업(Intel): Bob Swan 체제의 TSMC 위탁 계약은 취소가 불가능한 구조적 부담이며, 향후 내부 팹 램프업과 외부 외주 물량 간의 카니발라이제이션을 조율해야 하는 전략적 딜레마를 안고 있음.\n팹리스(Nvidia, AMD, Qualcomm, MediaTek): 공정 전환을 전략적으로 구사한 Nvidia/Qualcomm은 단기 원가 절감을 달성했으나 TSMC 회귀 과정에서 수십억 달러의 선급금 비용을 치름. 전속(Exclusive)에 가까운 협력을 유지한 AMD/MediaTek은 선급금 부담 없이 차세대 패키징 및 하프노드 선점 혜택을 향유함.",
+    "takeaway": "반도체 파운드리 (TSMC / Samsung): TSMC는 선단 공정 독점력을 바탕으로 충성 고객에게는 선행 기술과 유연성을, 이탈 고객에게는 막대한 선수금을 부과하는 전략적 지배력을 공고히 함. Samsung은 단가 경쟁력만으로는 초미세 공정의 수율·PPA 격차를 극복하기 어려우며, 주요 고객(Qualcomm)의 중도 이탈 리스크에 노출됨.\n경쟁 팹리스 (AMD / Nvidia / MediaTek / Qualcomm): 전속 위탁을 유지한 AMD와 MediaTek은 공정 선행 진입(3D 패키징, N4)과 현금 유동성 방어에서 반사이익을 얻음. 반면 듀얼 벤더 전략을 취한 Nvidia와 Qualcomm은 공정 결함 방어 비용 및 조 단위 선수금 부담이라는 기회비용을 치름.\nIDM (Intel): 제품 경쟁력 유지를 위해 TSMC 선단 공정 외주가 불가피하지만, 이는 내부 설계팀의 외부 의존도를 높여 장기적으로 자체 Fab의 가동률과 마진을 훼손할 수 있는 양날의 검임.\n인프라 및 부품 공급망 (기판, RFFE, PMIC): 선단 웨이퍼 캐파 외에도 기판(Substrate) 및 아날로그·전력 소자의 공급 차질이 시스템 레벨의 최종 병목으로 작용하므로 복합적인 서플라이 체인 관리가 요구됨.",
     "has_detail": true
   },
   {
@@ -4934,7 +4934,7 @@ window.POSTS = [
     "detected_at": "2026-10-02T15:49:45.964500+00:00",
     "slug": "the-great-gpu-shortage-rental-capacity",
     "paywalled": false,
-    "published_at": "2026-04-02T04:25:57.274Z",
+    "published_at": "2026-11-01T00:00:00.000Z",
     "feed_summary": "H100 Rental Prices up 40%, GPU Rental Pricing Dashboard Launch, Compute Rental Market Structure, Will Rental Prices keep going up?",
     "points": [
       "[비즈니스] GPU 감가상각 및 가치 하락 가설의 붕괴와 구형 가속기 수명 연장",
@@ -5449,7 +5449,7 @@ window.POSTS = [
     "has_detail": true
   },
   {
-    "title": "The Chinese AI Infrastructure Boom: Introducing the SemiAnalysis China Datacenter Model",
+    "title": "중국 AI 인프라 붐: SemiAnalysis 중국 데이터센터 모델 소개",
     "summary": "시장 규모: 중국 데이터센터 용량은 24GW 이상으로 EMEA(14GW) 및 중국 제외 아시아(15GW)를 상회하는 세계 2위 규모임.\n투자 가속: 2026년 2분기 BAT(Alibaba, Tencent, Baidu) 자본지출(Capex)은 200억 달러로 전년 대비 2배 이상 증가하며 역대 최대 폭의 상승을 기록함.\n핵심 수요처: 비상장사인 ByteDance가 중국 전체 데이터센터 용량의 약 1/5을 점유하며, 대부분을 임차(Lease) 형태로 사용해 시장 최대 고객으로 군림함.\n정책적 이동: '동수서산(Eastern Data, Western Compute)' 정책과 에너지 쿼터제를 통해 전력과 부지가 풍부한 내륙(내몽골 등)으로 인프라 중심축이 이동 중임.\n건설 효율: 100MW급 시설을 12개월 미만에 완공하는 속도와 미국 대비 현저히 낮은 건설 비용을 보유함.",
     "url": "https://newsletter.semianalysis.com/p/the-chinese-ai-infrastructure-boom",
     "source": "https://semianalysis.com/",
@@ -5472,14 +5472,14 @@ window.POSTS = [
     "has_detail": true
   },
   {
-    "title": "ClusterMAX 3.0: The Industry Standard GPU Cloud Rating System Returns",
-    "summary": "배경: GPU 공급 부족과 Neocloud(신생 클라우드) 시장의 급격한 팽창 속에서 77개 주요 제공업체를 포함한 총 323개 업체를 분석한 GPU 클라우드 등급 시스템(ClusterMAX 3.0) 발표.\n핵심 팩트: CoreWeave와 Nebius가 Platinum 등급을 차지하며 기술적/비즈니스적 표준을 제시함. Google Cloud가 Gold로 상승한 반면, Azure는 Silver로 하락함.\n영향도: 단순 GPU 대여를 넘어 관리형 클러스터(Managed Cluster)의 신뢰성, 보안, 자동 복구(Autoremediation) 능력이 기업의 실질적 연산 효율(Goodput)을 결정하는 핵심 차별화 요소로 부상함.\n단서: Blackwell(B200/B300) 및 Grace-Blackwell(GB200/GB300)로의 전환이 시작되었으며, 액체 냉각(DLC) 및 랙 스케일 설계가 인프라 운영의 난이도를 급격히 높이고 있음.",
+    "title": "ClusterMAX 3.0: 업계 표준 GPU 클라우드 등급 시스템의 귀환",
+    "summary": "배경: ClusterMAX 2.0 이후 8개월 만의 업데이트로, 전 세계 323개 GPU 클라우드 제공업체(77개 neocloud 집중 리뷰)를 대상으로 성능, 신뢰성, 보안, 가격을 평가함.\n핵심 팩트: NVIDIA Blackwell(B200/B300) 및 Grace-Blackwell(GB200/GB300) 인프라가 평가의 중심이며, 액체 냉각(DLC) 및 800G 네트워킹이 표준으로 자리 잡음.\n영향도: CoreWeave와 Nebius가 Platinum 등급을 차지하며 기술적/비즈니스적 기준점을 제시함. 반면, 많은 기존 업체들이 엄격해진 신뢰성 및 보안 기준으로 인해 등급이 하락함.\n단서: 프론티어 랩(OpenAI, Anthropic 등)은 자체 스택 관리를 선호하나, 중소 규모 랩(Neolabs)에게는 관리형 클러스터(Managed Cluster)의 TCO 효율성이 여전히 유효함.",
     "url": "https://newsletter.semianalysis.com/p/clustermax-30-the-industry-standard",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
     "slug": "clustermax-30-the-industry-standard",
     "paywalled": true,
-    "published_at": "2026-09-23T21:20:29.708Z",
+    "published_at": "2026-11-05T00:00:00.000Z",
     "title_ko": "GPU 클라우드 평가 ClusterMAX 3.0 — 업체별 클러스터 등급",
     "category": "biz",
     "takeaway": "ClusterMAX 3.0 개정판으로 주요 GPU 클라우드 인프라 신뢰성 평가",
@@ -5776,13 +5776,13 @@ window.POSTS = [
   },
   {
     "title": "AgentX - InferenceXv3: Does CUDA Moat Hold up in Agentic Inferencing?",
-    "summary": "배경: 2025년 말 Claude Code 출시 이후, 단순 챗봇을 넘어선 '에이전트형(Agentic)' 워크로드가 추론 트래픽의 주류로 부상함.\n핵심 팩트: SemiAnalysis는 100만 컨텍스트, 멀티턴, 서브 에이전트 버스트를 반영한 세계 최초의 오픈소스 에이전트 추론 벤치마크 'AgentX 1.0'을 발표함.\n영향도: 벤치마크 개발 과정에서 vLLM, SGLang, TensorRT-LLM 등 주요 추론 엔진에 70개 이상의 업스트림 PR(Pull Request)이 반영되어 실질적인 성능 최적화를 견인함.\n단서: NVIDIA B200/B300이 전반적인 우위를 점하고 있으나, AMD MI355X가 특정 모델(DeepSeek V4, Kimi K3) 및 특정 엔진(ATOM) 조합에서 NVIDIA의 가성비(Perf/$)를 위협하거나 추월하는 구간이 존재함.",
+    "summary": "배경: 2025년 말부터 단순 챗봇을 넘어선 '에이전트형(Agentic)' 워크로드(긴 컨텍스트, 멀티턴, 높은 접두사 재사용)가 추론 트래픽의 주류로 부상함.\n핵심 팩트: SemiAnalysis는 300만 달러 규모의 실제 에이전트 트래픽(Claude Code 등)을 기반으로 한 오픈소스 벤치마크 'AgentX 1.0'을 발표함.\n영향도: NVIDIA(B200/B300)와 AMD(MI355X) 간의 추론 성능 격차가 소프트웨어 최적화(vLLM, SGLang, ATOM 등)에 따라 실시간으로 변동 중이며, 단순 칩 성능보다 시스템 레벨의 KV 캐시 관리가 핵심 경쟁력으로 부상함.\n단서: NVIDIA는 전반적인 에코시스템과 TCO 효율에서 우위를 점하고 있으나, AMD는 특정 모델(Kimi K3 등)과 전용 엔진(ATOM)에서 NVIDIA의 최신 라인업을 위협하는 성능을 보여줌.",
     "url": "https://newsletter.semianalysis.com/p/agentx-inferencexv3-does-cuda-moat",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
     "slug": "agentx-inferencexv3-does-cuda-moat",
     "paywalled": true,
-    "published_at": "2026-08-24T00:19:35.800Z",
+    "published_at": "2026-11-05T00:00:00.000Z",
     "title_ko": "에이전틱 추론에서도 CUDA 해자는 유효한가 — InferenceX v3",
     "category": "acc",
     "takeaway": "에이전틱 추론 워크로드에서 엔비디아 CUDA 생태계 해자 지속성 검증",
@@ -5805,7 +5805,7 @@ window.POSTS = [
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
     "slug": "are-open-models-catching-up",
     "paywalled": true,
-    "published_at": "2026-08-21T16:40:02.824Z",
+    "published_at": "2026-11-01T00:00:00.000Z",
     "title_ko": "오픈 모델은 프론티어 모델을 따라잡고 있나",
     "category": "model",
     "takeaway": "오픈소스 모델과 프론티어 상용 모델 간의 정량적 성능 격차 추이",
@@ -5938,14 +5938,14 @@ window.POSTS = [
     "has_detail": true
   },
   {
-    "title": "Kimi K3, The Manos, The Mythos, The Legendos",
+    "title": "Kimi K3: The Manos, The Mythos, The Legendos",
     "summary": "배경: Moonshot AI의 오픈 프론티어 모델 Kimi K3의 독특한 모델 아키텍처(KDA, Block AttnRes, LatentMoE)와 시스템 서빙 특성을 분석함.\n핵심 팩트: 선형 어텐션(KDA)과 MLA를 3:1 비율로 혼합 적용하고, 깊이 방향 어텐션(Attention Residuals)과 통신 병목을 낮춘 LatentMoE 설계를 도입함.\n영향도: 어텐션 복잡도를 선형화하여 장문맥 처리 효율을 높였으나, 에이전트 워크로드(Append-prefill) 및 프리픽스 캐싱(Prefix caching)에서 서빙 엔지니어링의 신규 병목이 발생함.\n단서: B200 1개 노드에는 전체 가중치가 수용되지 않아 파이프라인 병렬화(PP)가 강제되며, B300 1노드에서도 동시 요청(Concurrency) 8 초과 시 KV 캐시 스래싱(Hit rate ＜ 10%)이 발생함.",
     "url": "https://newsletter.semianalysis.com/p/kimi-k3-the-manos-the-mythos-the",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
     "slug": "kimi-k3-the-manos-the-mythos-the",
     "paywalled": true,
-    "published_at": "2026-08-03T19:42:30.801Z",
+    "published_at": "2026-10-10T00:00:00.000Z",
     "title_ko": "문샷 AI Kimi K3 모델 아키텍처와 추론 성능",
     "category": "model",
     "takeaway": "문샷 AI Kimi K3 모델 아키텍처의 혁신과 추론 연산 특성",
@@ -5986,13 +5986,13 @@ window.POSTS = [
   },
   {
     "title": "Meta’s Infrastructure Team Needs A Culture Reset",
-    "summary": "배경: 원문은 Meta Infrastructure가 비대해지고 중간 관리자가 과잉 설계에 자원을 쓰며 정치화되었다고 진단. 6개월 평가 주기에서 하위 10~15%를 잘라 단기 성과 지향과 위험 회피를 낳는다고 봄.\n핵심 팩트: 원문은 Rivos 인수에 $2.5B 초과를 썼고, GPU 서버 설계(Grand Teton, Ariel)에서 표준보다 나쁜 커스터마이징을 해 왔으며, 같은 패턴이 AMD MI450X 커스텀 SKU에서 반복된다고 서술.\n영향도: 원문은 Ariel의 TCO가 표준 GB200 NVL72보다 14% 높았고 \"수십억 달러\"의 손실을 냈다고 봄. MI450X 커스텀은 AMD의 Meta 물량을 위협한다고 경고.\n단서: 다수 서술이 전직·현직 직원 증언에 의존하며, 원문 스스로 일부 수치(Ariel TCO 14%)는 \"our calculations\"로 표시.",
+    "summary": "핵심 문제: Meta 인프라 팀이 비대해진 중간 관리자 층과 정치적 의사결정으로 인해, 전사적 요구사항보다 특정 지표에 과최적화된 '오버엔지니어링' 솔루션을 양산하며 막대한 비용을 낭비하고 있음.\n문화적 결함: 6개월 단위의 성과 측정(하위 10~15% 퇴출)이 단기 성과 위주의 '윈도우 워싱(Window Washing)'과 잦은 전략 수정을 유발하여 공급망 신뢰도를 하락시킴.\n기술적 실책: Rivos 인수(25억 달러) 후 기술 통합 실패, Grand Teton 서버의 불필요한 스토리지 확장, Ariel(GB200)의 비효율적 구성 등으로 인해 타사 대비 TCO 경쟁력이 악화됨.\n향후 리스크: 차세대 AMD MI450X에서도 GenAI에 불리한 커스텀 사양을 고집하고 있어, 내부 AI 연구 조직(MSL, TBD Lab)의 외면과 자원 낭비가 반복될 우려가 있음.",
     "url": "https://newsletter.semianalysis.com/p/metas-infrastructure-team-needs-a",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
     "slug": "metas-infrastructure-team-needs-a",
     "paywalled": true,
-    "published_at": "2026-07-22T02:41:34.261Z",
+    "published_at": "2026-11-05T00:00:00.000Z",
     "title_ko": "메타 인프라 조직의 비대화와 문화 쇄신 필요성",
     "category": "biz",
     "takeaway": "메타 인프라 조직의 오버엔지니어링 문제와 엔지니어링 문화 쇄신",
@@ -6062,7 +6062,7 @@ window.POSTS = [
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
     "slug": "nvidia-gpu-debt-backstop-unleashes",
     "paywalled": true,
-    "published_at": "2026-07-06T21:53:44.655Z",
+    "published_at": "2026-11-01T00:00:00.000Z",
     "title_ko": "엔비디아 GPU 부채 보증 구조 — 자본·수요·데이터센터",
     "category": "biz",
     "takeaway": "엔비디아 GPU 부채 보증이 견인하는 자본·수요·데이터센터 3각 편대",
@@ -6101,7 +6101,7 @@ window.POSTS = [
     "has_detail": true
   },
   {
-    "title": "EMIB-T Roadmap, Custom HBM, HBM4 Packaging Challenges, Microfluidic Cooling, Photonic Interconnects, and More",
+    "title": "EMIB-T Roadmap, Custom HBM, HBM4 Packaging Challenges, Microfluidic Cooling, Photonic Interconnects, and More (ECTC 2026 Roundup)",
     "summary": "배경: 원문은 트랜지스터 밀도 스케일링이 둔화되어 첨단 패키징이 주된 스케일링 축이 되었고, AI 가속기가 커지면서 패키지 자체가 한계에 도달했다고 서술. 원형 인터포저의 크기·웨이퍼 활용 제약, HBM4E의 I/O 2배와 속도 상승, 수 kW급 패키지의 냉각 문제를 꼽음.\n핵심 팩트: 원문은 Intel이 EMIB-T를 36/35 µm 범프 피치와 2× 레티클 실리콘에서 검증했고(25 µm 시험 중), 240 mm × 240 mm(약 67 레티클) 쿼터 패널 시험 차량을 선보였다고 서술. Marvell의 커스텀 HBM은 호스트 ASIC의 HBM PHY 면적을 약 60% 줄인다고 주장. TSMC 마이크로필러 직접 실리콘 냉각은 4 LPM에서 4 kW, 8 LPM에서 5.3 kW를 방열했다고 서술.\n영향도: 원문은 EMIB-T가 Google TPU v9에 쓰일 것으로 예상되며 대형 패키지 AI 가속기에서 TSMC CoWoS의 가장 신뢰할 만한 대안이라고 봄. Nvidia가 GTC에서 Feynman에 커스텀 HBM을 쓴다고 발표했다고 서술.\n단서: 대부분 학회 발표(실험실 시험 차량, 시뮬레이션) 값이며 양산 수율과 신뢰성은 별개. 원문은 EMIB-T가 여러 면에서 CoWoS에 뒤처진다고 평가.",
     "url": "https://newsletter.semianalysis.com/p/ectc2026",
     "source": "https://semianalysis.com/",
@@ -6173,7 +6173,7 @@ window.POSTS = [
     "has_detail": true
   },
   {
-    "title": "China’s CXMT Is Set to Challenge DRAM Incumbents",
+    "title": "China's CXMT Is Set to Challenge DRAM Incumbents",
     "summary": "배경: 원문은 CXMT(2016년 설립, 합비 지방정부 \"506\" 프로젝트)가 독일 Qimonda 특허·문서·인력을 기반으로 DRAM 기술을 얻고, 합비 국유 벤처자본의 장기 자금으로 약 10년의 적자를 견뎠다고 서술. 상하이 STAR 시장 상장을 앞두고 있다고 봄.\n핵심 팩트: 원문은 CXMT가 FY25 매출 약 $8.6B(+156%), 순이익 첫 흑자 약 $1B이고 1Q26 매출 $7.3B(약 700% 증가), 영업이익률 약 70%라고 서술. 원문 모델은 2026년 매출이 $50B를 넘을 수 있다고 추정.\n영향도: 원문은 실적 급증이 점유율 확대가 아니라 ASP 폭등(1Q26 비트 출하 +11%, ASP +57%)에서 나온 것이라 봄. 2026년 말 웨이퍼 용량이 약 350 kwspm으로 Micron(약 385)에 근접한다고 추정.\n단서: 원문은 HBM이 아직 미성숙해 2025년 매출의 약 99%가 DDR/LPDDR이며 HBM3 8-hi의 종합 수율을 약 25%로 모델링. IPO 자금 사용 계획에 HBM 전용 항목이 없다고 서술.",
     "url": "https://newsletter.semianalysis.com/p/chinas-cxmt-is-set-to-challenge-dram",
     "source": "https://semianalysis.com/",
@@ -6226,7 +6226,7 @@ window.POSTS = [
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
     "slug": "rl-systems-mind-the-gap-matching",
     "paywalled": true,
-    "published_at": "2026-06-16T17:32:07.465Z",
+    "published_at": "2026-11-01T00:00:00.000Z",
     "title_ko": "강화학습 시스템: 학습기·생성기 처리량 불일치 해소",
     "category": "model",
     "takeaway": "강화학습 시스템에서 학습기와 생성기 간 처리량 불일치 해소 방안",
@@ -6250,7 +6250,7 @@ window.POSTS = [
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
     "slug": "steel-smic-n3-teardown",
     "paywalled": true,
-    "published_at": "2026-06-14T19:14:21.465Z",
+    "published_at": "2026-11-01T00:00:00.000Z",
     "title_ko": "SMIC N+3 배선 피치는 인텔 18A보다 작은가 — 기린 9030 분해",
     "category": "chip",
     "takeaway": "중국 SMIC N+3 공정 기린 9030 칩 분해로 측정한 배선 피치 비교",
@@ -6323,7 +6323,7 @@ window.POSTS = [
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
     "slug": "chinas-unitree-will-dominate-global",
     "paywalled": true,
-    "published_at": "2026-06-08T16:35:36.456Z",
+    "published_at": "2026-10-10T00:00:00.000Z",
     "title_ko": "유니트리의 성장 궤적은 여전히 과소평가돼 있다",
     "category": "biz",
     "takeaway": "중국 유니트리의 급격한 하드웨어 개발 속도와 로봇 시장 진입",
