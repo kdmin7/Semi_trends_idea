@@ -402,3 +402,19 @@
   - `fa747fc`: 상세 리포트 뷰어 가독성 및 플랫 노션 UI 대개편
   - `f134e07`: change.md 작업 내역 1차 기록
   - `f47f7e9`: 부팅 시 자동 크롤링 후 신규 글 감지 시 GitHub 자동 커밋&푸시 연동
+
+
+## 2026-11-06 — agy 세션 시작 자동 크롤링 연동 및 index.html 실시간 자동 갱신 파이프라인 고도화
+
+### 1. agy 실행 시 자동 크롤링 연동
+- .agents/hooks.json 추가: Antigravity 라이프사이클의 SessionStart 훅 이벤트에 scripts/agy_session_start.py를 연동하여 agy 실행 시 python scripts/url_monitor_pipeline.py --check-latest를 무조건 자동 실행하도록 설정.
+- .agents/rules/url-monitor.md 갱신: 시작 시 최신 글 수집 파이프라인을 실행하는 Startup Execution Rule 명시.
+- scripts/agy_session_start.py 작성: 비차단 표준 입출력 및 유효한 JSON injectSteps 형식으로 결과 주입.
+
+### 2. 크롤링 결과 index.html 및 웹 대시보드 자동 반영
+- scripts/url_monitor_pipeline.py에 update_results_json() 연동: 새 글이 크롤링되면 output/results.json에 즉시 등록되어 uild_data.py를 통해 웹 데이터셋(ssets/data.js)에 자동 반영되도록 수정.
+- uild_site.py 개선: 사이트 빌드 시 index.html 내 ssets/data.js?v={YYYYMMDD_HHMMSS} 캐시 버스터 쿼리스트링을 자동 갱신하고 docs/로 동기화.
+
+### 3. 신규 4건 아티클 수집 및 카탈로그 갱신
+- 신규 글 4건(ASML Hybrid Bonding, Meta Infrastructure, AgentX InferenceXv3, ClusterMAX 3.0) 수집 및 10대 항목 심층 요약 작성 완료.
+- 색인 카탈로그 359건 갱신 및 docs/pending.json 발송 대기열 등록 완료.

@@ -1,1 +1,30 @@
-[]
+[
+  {
+    "title": "ASML Is Building a Hybrid Bonding Tool, Sending More Chills to Besi",
+    "summary": "# [SemiAnalysis 분석] ASML Is Building a Hybrid Bonding Tool, Sending More Chills to Besi\n\n| 항목 | 내용 |\n|---|---|\n| 발행일 | 2026년 11월 5일 (원문 게시: 2026년 10월 15일) |\n| 출처 | SemiAnalysis |\n| 저자 | Sherry Zhang, Gerald Wong, Steven Lee, Dylan Patel |\n| 수집 범위 | 유료 미리보기(일부) - 후반부 '해결 과제' 및 'Besi 영향' 상세 내용 누락 |\n| ",
+    "url": "https://newsletter.semianalysis.com/p/asml-is-building-a-hybrid-bonding",
+    "source": "https://newsletter.semianalysis.com",
+    "detected_at": "2026-11-05T14:29:16.854590+00:00"
+  },
+  {
+    "title": "Meta’s Infrastructure Team Needs A Culture Reset",
+    "summary": "# [SemiAnalysis 분석] Meta’s Infrastructure Team Needs A Culture Reset\n\n| 항목 | 내용 |\n|---|---|\n| 발행일 | 2026년 7월 21일 (2026년 8월 3일 업데이트 포함) |\n| 출처 | SemiAnalysis (Wayne Ma, Myron Xie, Julien Martin-Prin 등) |\n| 저자 | Wayne Ma, Myron Xie, Julien Martin-Prin 외 2인 |\n| 수집 범위 | 유료 미리보기(일부) - DSF 네트워킹 아키텍처 및 문화 ",
+    "url": "https://newsletter.semianalysis.com/p/metas-infrastructure-team-needs-a",
+    "source": "https://newsletter.semianalysis.com",
+    "detected_at": "2026-11-05T14:30:16.685260+00:00"
+  },
+  {
+    "title": "AgentX - InferenceXv3: Does CUDA Moat Hold up in Agentic Inferencing?",
+    "summary": "# [SemiAnalysis 분석] AgentX - InferenceXv3: Does CUDA Moat Hold up in Agentic Inferencing?\n\n| 항목 | 내용 |\n|---|---|\n| 발행일 | 2026년 11월 5일 (본문 내 데이터 기준 2026년 8월 23일 업데이트 포함) |\n| 출처 | SemiAnalysis (InferenceX) |\n| 저자 | Cam Quilici, Bryan Shan, Alec Ibarra 외 4명 |\n| 수집 범위 | 유료 미리보기(일부) - 후반부 '모델 라이프사이클별 성능'",
+    "url": "https://newsletter.semianalysis.com/p/agentx-inferencexv3-does-cuda-moat",
+    "source": "https://newsletter.semianalysis.com",
+    "detected_at": "2026-11-05T14:31:31.947912+00:00"
+  },
+  {
+    "title": "ClusterMAX 3.0: The Industry Standard GPU Cloud Rating System Returns",
+    "summary": "# [SemiAnalysis 분석] ClusterMAX 3.0: 업계 표준 GPU 클라우드 등급 시스템의 귀환\n\n| 항목 | 내용 |\n|---|---|\n| 발행일 | 2026년 11월 5일 (원문 내 리포트 시점은 2026년 9월) |\n| 출처 | SemiAnalysis |\n| 저자 | Jordan Nanos, Sam Harshe, Samuel Kruse 외 4명 |\n| 수집 범위 | 유료 미리보기(일부) - 본문 하단 유료 결제 장벽(Paywall) 존재로 인해 이후 상세 분석 내용 누락 가능성 있음 |\n| 정리 관점 | 반도체·",
+    "url": "https://newsletter.semianalysis.com/p/clustermax-30-the-industry-standard",
+    "source": "https://newsletter.semianalysis.com",
+    "detected_at": "2026-11-05T14:33:13.462983+00:00"
+  }
+]

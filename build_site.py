@@ -2,6 +2,8 @@ import os
 import sys
 import subprocess
 import shutil
+import re
+from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SCRIPTS_DIR = os.path.join(BASE_DIR, "scripts")
@@ -14,7 +16,18 @@ def build_all():
     if os.path.exists(build_data_script):
         subprocess.run([sys.executable, build_data_script], check=True)
 
-    # 2. Sync HTML pages and assets to docs/ for static hosting (e.g. GitHub Pages)
+    # 2. Update cache buster in index.html to guarantee browser refresh shows new posts
+    index_path = os.path.join(BASE_DIR, "index.html")
+    if os.path.exists(index_path):
+        with open(index_path, "r", encoding="utf-8") as f:
+            html = f.read()
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        updated_html = re.sub(r'assets/data\.js\?v=[^"\'\s>]+', f'assets/data.js?v={ts}', html)
+        if updated_html != html:
+            with open(index_path, "w", encoding="utf-8") as f:
+                f.write(updated_html)
+
+    # 3. Sync HTML pages and assets to docs/ for static hosting (e.g. GitHub Pages)
     pages = ["index.html"]
     for p in pages:
         src = os.path.join(BASE_DIR, p)
@@ -29,7 +42,6 @@ def build_all():
             shutil.rmtree(docs_assets)
         # 글별 상세 요약(assets/summaries)은 비공개: 공개 사이트(docs/)로 복사하지 않는다
         shutil.copytree(ASSETS_DIR, docs_assets, ignore=shutil.ignore_patterns("summaries"))
-
 
     print("All site pages and assets successfully built and synced to docs/!")
 

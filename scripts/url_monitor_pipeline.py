@@ -196,6 +196,44 @@ def append_to_pending(title: str, summary: str, url: str):
     except Exception as e:
         print(f"    [!] Pending queue error: {e}", file=sys.stderr)
 
+def update_results_json(title: str, summary: str, url: str, slug: str, pub_time: str, metadata: dict):
+    """output/results.json에 신규 아티클 정보를 등록하여 웹 대시보드(index.html)에서 즉시 반영되도록 연동"""
+    results_file = BASE_DIR / "output" / "results.json"
+    results = []
+    if results_file.exists():
+        try:
+            results = json.loads(results_file.read_text(encoding="utf-8"))
+        except Exception:
+            results = []
+
+    # slug 또는 url 기준 기존 항목 검색
+    existing = next((r for r in results if r.get("slug") == slug or r.get("url") == url), None)
+    paywalled = ("유료" in (summary or "")[:200]) or (metadata.get("audience") != "everyone")
+
+    if existing:
+        existing["title"] = title
+        if summary and (not existing.get("summary") or len(summary) > len(existing.get("summary", ""))):
+            existing["summary"] = summary[:300]
+        existing["paywalled"] = paywalled
+        if pub_time and not existing.get("published_at"):
+            existing["published_at"] = pub_time
+    else:
+        new_entry = {
+            "title": title,
+            "summary": summary[:300] if summary else "",
+            "url": url,
+            "source": "https://newsletter.semianalysis.com",
+            "detected_at": datetime.now(timezone.utc).isoformat(),
+            "slug": slug,
+            "paywalled": paywalled,
+            "published_at": pub_time
+        }
+        results.insert(0, new_entry)
+
+    results_file.parent.mkdir(parents=True, exist_ok=True)
+    results_file.write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"    [V] 웹 데이터 원본(output/results.json) 등록/갱신 완료: {slug}")
+
 def process_target_url(target_url: str, firecrawl_key: str, gemini_client, system_prompt: str, history: set) -> bool:
     """단일 신규 URL 파이프라인 수행"""
     if target_url in history:
@@ -263,7 +301,11 @@ scraped_at: {datetime.now(timezone.utc).isoformat()}
     # 6. 이메일 대기열 추가
     append_to_pending(title, summary_text, target_url)
 
-    # 7. 웹 대시보드 색인 카탈로그 자동 갱신
+    # 7. 웹 대시보드 원본(results.json) 등록 및 index.html 자동 반영
+    slug = target_url.rstrip("/").split("/")[-1]
+    update_results_json(title, summary_text, target_url, slug, pub_time, metadata)
+
+    # 8. 웹 대시보드 색인 카탈로그 및 index.html 자동 갱신
     trigger_catalog_rebuild()
 
     print(f"    [★] 파이프라인 전체 완료! 웹 게시판 및 Google Drive에 반영되었습니다.")

@@ -1,0 +1,12 @@
+{
+  "auto-url-monitor": {
+    "enabled": true,
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "python ../scripts/agy_session_start.py",
+        "timeout": 300
+      }
+    ]
+  }
+}
