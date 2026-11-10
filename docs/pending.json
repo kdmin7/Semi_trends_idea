@@ -152,5 +152,40 @@
     "url": "https://newsletter.semianalysis.com/p/stop-saying-half-of-2026-us-datacenter",
     "source": "https://newsletter.semianalysis.com",
     "detected_at": "2026-11-09T14:14:40.100276+00:00"
+  },
+  {
+    "title": "China’s CXMT Is Set to Challenge DRAM Incumbents",
+    "summary": "# [SemiAnalysis 분석] China’s CXMT Is Set to Challenge DRAM Incumbents\n\n| 항목 | 내용 |\n|---|---|\n| 발행일 | 2026년 6월 23일 (데이터상 2026년 11월 10일 수집) |\n| 출처 | SemiAnalysis (newsletter.semianalysis.com) |\n| 저자 | Ray Wang, Myron Xie, Dylan Patel 등 |\n| 수집 범위 | 유료 미리보기(일부) - 장비 생태계 및 상세 HBM 분석 직전까지 수집됨 |\n| 정리 관점 | 반",
+    "url": "https://newsletter.semianalysis.com/p/chinas-cxmt-is-set-to-challenge-dram",
+    "source": "https://newsletter.semianalysis.com",
+    "detected_at": "2026-11-10T13:34:13.634918+00:00"
+  },
+  {
+    "title": "US Grid Constraints: Towards 40GW+ of Behind-The-Meter Datacenter by 2028?",
+    "summary": "# [SemiAnalysis 분석] US Grid Constraints: Towards 40GW+ of Behind-The-Meter Datacenter by 2028?\n\n| 항목 | 내용 |\n|---|---|\n| 발행일 | 2026-11-10 (본문 내 작성일은 2026-06-25로 표기됨) |\n| 출처 | SemiAnalysis (newsletter.semianalysis.com) |\n| 저자 | Jeremie Eliahou Ontiveros, Sebastian Orejas, Ellie Holbrook, Dylan Patel |",
+    "url": "https://newsletter.semianalysis.com/p/us-grid-constraints-towards-40gw",
+    "source": "https://newsletter.semianalysis.com",
+    "detected_at": "2026-11-10T13:35:45.225920+00:00"
+  },
+  {
+    "title": "The Future of Meta Superintelligence: A 1 Year Progress Update",
+    "summary": "# [SemiAnalysis 분석] The Future of Meta Superintelligence: A 1 Year Progress Update\n\n| 항목 | 내용 |\n|---|---|\n| 발행일 | 2026년 7월 9일 (게시물 상단 날짜 기준, frontmatter는 11월로 되어 있으나 본문 내 2026년 상황 묘사) |\n| 출처 | SemiAnalysis (Substack) |\n| 저자 | Max Kan, Julien Martin-Prin, Jeremie Eliahou Ontiveros, Dylan Patel |\n| 수집",
+    "url": "https://newsletter.semianalysis.com/p/the-future-of-meta-superintelligence",
+    "source": "https://newsletter.semianalysis.com",
+    "detected_at": "2026-11-10T13:38:10.373803+00:00"
+  },
+  {
+    "title": "Can AMD break the CUDA Moat? AMD Advancing AI 2026 ",
+    "summary": "# [SemiAnalysis 분석] Can AMD break the CUDA Moat? AMD Advancing AI 2026\n\n| 항목 | 내용 |\n|---|---|\n| 발행일 | 2026년 7월 24일 (게시물 내 날짜와 제목의 2026년 11월 10일 혼재, 내용상 2026년 중반 시점) |\n| 출처 | SemiAnalysis (Substack) |\n| 저자 | Bryan Shan, Daniel Nishball, Myron Xie 외 9명 |\n| 수집 범위 | 유료 미리보기(일부) - 파트 3(TCO 및 OpenAI/Meta ",
+    "url": "https://newsletter.semianalysis.com/p/can-amd-break-the-cuda-moat-amd-advancing",
+    "source": "https://newsletter.semianalysis.com",
+    "detected_at": "2026-11-10T13:40:43.755960+00:00"
+  },
+  {
+    "title": "The Iron(wood) Throne: Google's TPU Stakes Its Claim on Inference",
+    "summary": "# [SemiAnalysis 분석] The Iron(wood) Throne: Google's TPU Stakes Its Claim on Inference\n\n| 항목 | 내용 |\n|---|---|\n| 발행일 | 2026-11-10 |\n| 출처 | SemiAnalysis (Substack) |\n| 저자 | Bryan Shan, Alec Ibarra, Cam Quilici 외 4인 |\n| 수집 범위 | 유료 미리보기(일부) (본문 하단 \"Paid\" 및 구독 안내 문구 존재) |\n| 정리 관점 | 반도체·전자·컴퓨팅 시스템 실무자의 읽기 ",
+    "url": "https://newsletter.semianalysis.com/p/tpu-strikes-the-king",
+    "source": "https://newsletter.semianalysis.com",
+    "detected_at": "2026-11-10T13:42:31.700498+00:00"
   }
 ]
