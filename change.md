@@ -418,3 +418,52 @@
 ### 3. 신규 4건 아티클 수집 및 카탈로그 갱신
 - 신규 글 4건(ASML Hybrid Bonding, Meta Infrastructure, AgentX InferenceXv3, ClusterMAX 3.0) 수집 및 10대 항목 심층 요약 작성 완료.
 - 색인 카탈로그 359건 갱신 및 docs/pending.json 발송 대기열 등록 완료.
+
+
+## 2026-11-13 — 부팅 자동 실행 점검: 로깅, Firecrawl v2, 메일 복구, 중복·날짜 정리
+
+### 1. `scripts/run_on_startup.py` 로깅 적용과 정리 (`aff8973`, `14fb9c0`)
+- `print`/`log_message`를 표준 `logging`으로 교체: 콘솔 + `logs/startup_run.log`(UTF-8), 형식 `[시각] [LEVEL] 메시지`, 예외는 `log.exception`으로 스택 트레이스까지 기록.
+- 파이프라인 stderr는 성공(exit 0)이어도 WARNING으로 기록(이전에는 실패 때만).
+- 10초 대기를 `should_run()` 뒤로 이동: 4시간 이내 재부팅이면 대기 없이 바로 종료.
+- `subprocess.run` 5곳을 `_run()` 헬퍼로 통합. 하위 프로세스에 `PYTHONIOENCODING=utf-8`, `PYTHONUTF8=1`을 넣어 로그의 한글 깨짐(`G:\�� ����̺�`) 해결.
+- 변경 감지를 `git status` 필터 대신 `git add .` 후 `git diff --cached --name-only`로 바꿔 감지 대상과 커밋 대상을 일치시킴.
+
+### 2. Firecrawl API v1 → v2 (`1aa6df5`)
+- v1은 2026-12-10 15:00 UTC 종료(이후 HTTP 410). `url_monitor_pipeline.py`(map·scrape), `fetch_archive_md.py`(scrape)를 `/v2`로 변경.
+- v2 map의 `links`는 `{url,title,description}` 객체라 문자열/객체 모두 처리하도록 수정. 안 고치면 `TypeError`가 `except`에 삼켜져 빈 목록이 반환될 뻔함.
+- 실제 v2 호출 검증은 하지 않음. 다음 자동 실행 로그에서 `Firecrawl ... error` 유무로 확인.
+
+### 3. 알림 메일 복구 (`c95b036`)
+- 원인: 부팅 파이프라인(`url_monitor_pipeline.py`)은 `docs/pending.json`에 덧붙이기만 하고 `send_email.py`를 호출하지 않음(발송은 보관 처리된 `run_daily.py`의 몫이었음). `sent.json`은 10-26 이후 갱신 없고 `pending.json`에 28건(그중 실제 미발송 5건)이 쌓임.
+- `run_on_startup.py`: 파이프라인 성공 후 `send_pending_email()` 실행(실패해도 git 동기화는 계속).
+- `send_email.py`: `sent.json`에 있거나 큐 내 중복인 URL을 제외하고 정리된 큐를 저장(안 고치면 이미 보낸 23건이 중복 발송됨).
+- `pending.py`는 쓰지 않음: `docs/items.json`이 낡아 큐를 덮어쓰면 미발송 항목이 지워짐.
+
+### 4. `docs/items.json` 갱신 중단 확인과 CLAUDE.md 갱신 (`47c7cac`)
+- `items.json` ← `build_dashboard.py` ← `data/items/*.jsonl` ← `monitor.py`(archive로 이동) 경로가 끊겨 2026-11-01 이후 갱신되지 않음. 사이트(`assets/data.js`)는 영향 없음.
+- CLAUDE.md 파이프라인 항목을 `run_on_startup.py` 기준으로 다시 쓰고, `run_daily.py`·`monitor.py`·`dedup.py`·`build_dashboard.py`·`pending.py`·`data/items`·`items.json`을 레거시로 표기.
+
+### 5. 옛 글 재처리 방지와 아카이브 API 변경 대응 (`33bcac5`, `8adc2f6`, `d006506`)
+- Substack 아카이브 API가 변경됨: 응답이 `{"posts":[...],"nextCursor":"..."}`로 바뀌고 `offset`은 HTTP 400으로 거부, 다음 쪽은 `cursor=<nextCursor>`. 기존 코드는 리스트를 가정해 아카이브 탐색이 조용히 실패했고, 후보 링크는 전부 Firecrawl map(임의 순서)에서 와서 옛 글이 "신규"로 반복 처리됨.
+- `url_monitor_pipeline.py`: 응답 형태 둘 다 처리, `post_date` 확보, 히스토리·`sent.json`·`pending.json`·`docs/index.json`의 slug로 기존 글 건너뛰기(`load_known_slugs`), map은 아카이브 실패 시 대체 수단으로만 사용.
+- 발행일 우선순위: 아카이브 `post_date` > Firecrawl `publishedTime` > 오늘(예전에는 오늘로 폴백해 파일명·frontmatter 날짜가 틀렸음).
+- `fetch_archive_md.py`: `list_posts()`를 커서 페이징으로 수정(348건, 2020-05-22 ~ 2026-11-07 전부 수집 확인).
+
+### 6. 카탈로그 정리 (`16cd467`, `61af328`)
+- 제목 깨짐: 파이프라인이 요약 맨 앞에 붙이는 `<!-- source: URL -->` 줄이 제목이 되던 문제 → `first_title_line()`이 빈 줄·HTML 주석을 건너뜀(깨진 제목 28건 → 0건).
+- 중복: 같은 글의 요약 21건(18개 글)을 `source_url` slug 기준으로 대표 하나만 남김. 대표 선택 기준은 표준 파일명 > `NNN_` 접두어 없음 > 파일명 날짜=발행일 > 용량. 파일은 지우지 않고 카탈로그에서만 제외(`output/semianalysis` 삭제 금지 규칙, Drive만 지우면 `sync_to_gdrive.py`가 되살림). 카탈로그 383 → 362건, 카테고리·태그 집계는 중복 제거 후 재계산.
+
+### 7. 요약 발행일 정정 (31건, 코드 변경 없음)
+- 실제 발행일(아카이브 `post_date`)과 달랐던 요약의 `발행일` 표 행을 고침: 2026-11로 잘못 찍힌 22건 + 하루 차이 등 9건. 저장은 `storage.save_summary(..., overwrite=True)`로 로컬·Drive 연도 폴더·`00_핵심요약_전체`에 반영. 파일명은 바꾸지 않음.
+- 카탈로그 범위가 `~2026-11-10` → `~2026-11-07`(실제 최신 글)로 바로잡힘. 불일치 0건. 사이트 데이터(`assets/data.js`)는 원래 아카이브 날짜를 써서 변화 없음.
+- 원본 백업은 세션 임시 폴더(scratchpad)에 있어 영구 보관이 아님.
+
+### 8. 배포
+- `public` 브랜치 커밋 10개를 `origin/main`에 푸시(`c5b75a3..61af328`). 푸시 전 `config/email.yml` 수신자가 `example.com` 자리표시자인지, diff에 키·개인 주소·경로가 없는지 확인.
+
+### 남은 할 일
+- 다음 자동 실행 로그 확인: `[MAIL]`(미발송 5건 발송), `Firecrawl ... error`, `Drive:` 줄 한글.
+- 카탈로그 362건과 아카이브 348건의 차이 14건, 아카이브에 없는 카탈로그 항목 30건 확인.
+- 파일명 규칙 불일치: 파이프라인이 제목형 이름으로 저장(`storage`의 `YYYY-MM-DD_slug.md` 규칙과 다름). `url_monitor_pipeline.py`가 `RAW_DIR`/`SUMMARY_DIR`을 직접 지정.
+- 로그 로테이션(`RotatingFileHandler`), Pyright 경고 정리(`reconfigure`, 안 쓰는 import), README의 파이프라인 설명 갱신.
