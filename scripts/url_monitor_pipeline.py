@@ -74,7 +74,7 @@ def save_history(history_set: set):
 
 def firecrawl_map(site_url: str, api_key: str, limit: int = 25) -> list[str]:
     """Firecrawl Map API를 호출하여 사이트의 최신 링크 목록을 반환합니다."""
-    endpoint = "https://api.firecrawl.dev/v1/map"
+    endpoint = "https://api.firecrawl.dev/v2/map"
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
@@ -84,7 +84,8 @@ def firecrawl_map(site_url: str, api_key: str, limit: int = 25) -> list[str]:
     try:
         with urllib.request.urlopen(req, timeout=25) as resp:
             data = json.loads(resp.read().decode("utf-8"))
-            links = data.get("links", [])
+            # v2 는 links 가 {url, title, description} 객체 목록이다 (v1 은 문자열)
+            links = [l["url"] if isinstance(l, dict) else l for l in data.get("links", [])]
             # /p/ 가 포함된 아티클 링크만 필터링
             article_links = [l for l in links if "/p/" in l and not l.endswith("/comments")]
             return article_links
@@ -121,7 +122,7 @@ def fetch_latest_links(site_url: str, firecrawl_key: str, limit: int = 25) -> li
 
 def firecrawl_scrape(url: str, api_key: str):
     """Firecrawl Scrape API를 호출하여 대상 URL의 마크다운 본문을 추출합니다."""
-    endpoint = "https://api.firecrawl.dev/v1/scrape"
+    endpoint = "https://api.firecrawl.dev/v2/scrape"
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",

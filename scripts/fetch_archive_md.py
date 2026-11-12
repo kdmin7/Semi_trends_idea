@@ -37,7 +37,7 @@ if sys.platform == "win32":
 BASE_DIR = pathlib.Path(__file__).resolve().parent.parent
 SITE = "https://newsletter.semianalysis.com"
 ARCHIVE_API = SITE + "/api/v1/archive?sort=new&limit={limit}&offset={offset}"
-FIRECRAWL_API = "https://api.firecrawl.dev/v1/scrape"
+FIRECRAWL_API = "https://api.firecrawl.dev/v2/scrape"
 PAGE = 25  # archive API 는 한 번에 최대 25건만 돌려준다. 이보다 크게 잡고 offset 을 그만큼 넘기면 중간 글이 빠진다(50이면 314/341건만 보였음)
 UA = "Mozilla/5.0 (url-monitor archive fetcher)"
 
