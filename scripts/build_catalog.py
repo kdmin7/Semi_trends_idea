@@ -61,6 +61,16 @@ TAG_PATTERNS = {
     "Arm": r"\b(ARM|Arm|암)\b"
 }
 
+def first_title_line(content: str) -> str:
+    """제목으로 쓸 첫 줄. 빈 줄과 HTML 주석(`<!-- source: URL -->` 등 파이프라인이 붙이는 메타 줄)은 건너뛴다."""
+    for line in content.split("\n"):
+        s = line.strip()
+        if not s or (s.startswith("<!--") and s.endswith("-->")):
+            continue
+        return line
+    return ""
+
+
 def clean_title(title_raw: str, filename: str) -> str:
     """제목 정제: 접두사 및 마크다운 특수문자 제거"""
     title = title_raw.strip()
@@ -228,7 +238,7 @@ def build_catalog():
             content = fp.read()
 
         # 1. 제목
-        first_line = content.split("\n")[0]
+        first_line = first_title_line(content)
         title = clean_title(first_line, filename)
 
         # 2. 날짜
