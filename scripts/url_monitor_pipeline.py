@@ -72,6 +72,37 @@ def save_history(history_set: set):
     HISTORY_FILE.parent.mkdir(parents=True, exist_ok=True)
     HISTORY_FILE.write_text(json.dumps(sorted(list(history_set)), ensure_ascii=False, indent=2), encoding="utf-8")
 
+SENT_FILE = BASE_DIR / "data" / "state" / "sent.json"
+CATALOG_FILE = BASE_DIR / "docs" / "index.json"
+
+
+def slug_of(url: str) -> str:
+    """글 URL에서 slug(/p/ 뒤 경로)만 뽑는다. 끝 슬래시·쿼리·대소문자 차이를 무시하기 위함."""
+    path = url.split("?", 1)[0].split("#", 1)[0].rstrip("/")
+    return path.rsplit("/p/", 1)[-1].lower() if "/p/" in path else path.lower()
+
+
+def load_known_slugs(history: set) -> set:
+    """이미 수집·요약·발송된 글의 slug 집합.
+
+    pipeline_history.json 은 이 파이프라인이 직접 처리한 URL만 담고 있어서, fetch_archive_md.py 등
+    다른 경로로 받은 옛 글이 '신규'로 다시 처리되는 문제가 있었다. 카탈로그·발송 기록·대기열도 함께 본다.
+    """
+    urls = set(history)
+    for path, key in ((SENT_FILE, None), (PENDING_FILE, "url"), (CATALOG_FILE, "source_url")):
+        try:
+            if not path.exists():
+                continue
+            data = json.loads(path.read_text(encoding="utf-8"))
+            for item in data:
+                u = item if key is None else (item.get(key) if isinstance(item, dict) else None)
+                if isinstance(u, str) and u:
+                    urls.add(u)
+        except Exception as e:
+            print(f"[!] 기존 글 목록 로드 실패 ({path.name}): {e}", file=sys.stderr)
+    return {slug_of(u) for u in urls}
+
+
 def firecrawl_map(site_url: str, api_key: str, limit: int = 25) -> list[str]:
     """Firecrawl Map API를 호출하여 사이트의 최신 링크 목록을 반환합니다."""
     endpoint = "https://api.firecrawl.dev/v2/map"
@@ -112,11 +143,13 @@ def fetch_latest_links(site_url: str, firecrawl_key: str, limit: int = 25) -> li
     except Exception as e:
         print(f"[!] Substack archive API check failed: {e}", file=sys.stderr)
 
-    # 2. Firecrawl Map (보조 탐색)
-    fc_links = firecrawl_map(site_url, firecrawl_key, limit=limit)
-    for l in fc_links:
-        if l not in links:
-            links.append(l)
+    # 2. Firecrawl Map — 아카이브 API 가 실패했을 때만 쓰는 대체 수단.
+    #    map 은 날짜순이 아니라 임의 순서의 링크를 주므로, 정상일 때 섞으면 옛 글이 '신규'로 잡힌다.
+    if not links:
+        print("[!] Substack 아카이브 API 결과가 없어 Firecrawl map 으로 대체합니다.", file=sys.stderr)
+        for l in firecrawl_map(site_url, firecrawl_key, limit=limit):
+            if l not in links:
+                links.append(l)
 
     return links
 
@@ -362,7 +395,11 @@ def main():
         print("[*] Substack 아카이브 및 Firecrawl을 통해 최신 발행 목록 확인 중...")
         latest_links = fetch_latest_links("https://newsletter.semianalysis.com", firecrawl_key, limit=25)
         
-        new_links = [l for l in latest_links if l not in history]
+        known_slugs = load_known_slugs(history)
+        new_links = [l for l in latest_links if l not in history and slug_of(l) not in known_slugs]
+        skipped = len(latest_links) - len(new_links)
+        if skipped:
+            print(f"[*] 이미 수집된 글 {skipped}건은 건너뜁니다 (히스토리·카탈로그·발송 기록 기준).")
         if not new_links:
             print(f"[V] 새로운 신규 아티클이 없습니다. (확인된 {len(latest_links)}개 링크 모두 처리 완료됨)")
             return
