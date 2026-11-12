@@ -10,10 +10,10 @@ PC 부팅(로그온) 시 자동 실행되는 모니터링 가드 스크립트.
 3. 충족 시 url_monitor_pipeline.py --check-latest 실행
 4. 신규 아티클 감지 및 빌드 변경 사항이 있을 경우:
    -> 자동으로 git commit 및 git push 실행하여 GitHub Pages 최신화!
-5. 실행 결과 및 시간을 logs/ 에 기록
+5. 실행 결과 및 시간을 logs/startup_run.log 에 기록 (표준 logging, 레벨별 구분)
 """
 
-import os
+import logging
 import sys
 import subprocess
 import pathlib
@@ -32,22 +32,48 @@ LOG_FILE = LOGS_DIR / "startup_run.log"
 
 MIN_INTERVAL_HOURS = 4  # 최소 실행 간격 (시간 단위)
 
+log = logging.getLogger("run_on_startup")
 
-def log_message(msg: str):
-    timestamp = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
-    line = f"{timestamp} {msg}"
-    print(line)
+
+def _run(cmd, **kwargs):
+    """BASE_DIR 에서 실행하고 stdout/stderr 를 UTF-8 텍스트로 캡처한다."""
+    return subprocess.run(
+        cmd,
+        cwd=str(BASE_DIR),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        **kwargs,
+    )
+
+
+def setup_logging() -> None:
+    """콘솔 + logs/startup_run.log(UTF-8, 추가 기록) 양쪽에 같은 형식으로 남긴다."""
+    log.setLevel(logging.INFO)
+    log.propagate = False
+    if log.handlers:  # 중복 호출 방지
+        return
+
+    fmt = logging.Formatter("[%(asctime)s] [%(levelname)s] %(message)s", "%Y-%m-%d %H:%M:%S")
+
+    console = logging.StreamHandler(sys.stdout)
+    console.setFormatter(fmt)
+    log.addHandler(console)
+
     try:
         LOGS_DIR.mkdir(parents=True, exist_ok=True)
-        with open(LOG_FILE, "a", encoding="utf-8") as f:
-            f.write(line + "\n")
-    except Exception as e:
-        print(f"[WARN] 로그 파일 기록 실패: {e}", file=sys.stderr)
+        file_handler = logging.FileHandler(LOG_FILE, encoding="utf-8")
+        file_handler.setFormatter(fmt)
+        log.addHandler(file_handler)
+    except OSError as e:
+        # 파일 로그를 못 열어도 콘솔 로그로 계속 실행한다
+        log.warning("로그 파일 기록 실패: %s", e)
 
 
 def should_run() -> bool:
     if not LAST_RUN_FILE.exists():
-        log_message("이전 실행 기록이 없습니다. 최초 실행으로 판정합니다.")
+        log.info("이전 실행 기록이 없습니다. 최초 실행으로 판정합니다.")
         return True
 
     try:
@@ -59,14 +85,15 @@ def should_run() -> bool:
         threshold = timedelta(hours=MIN_INTERVAL_HOURS)
 
         if elapsed >= threshold:
-            log_message(f"마지막 실행 후 {elapsed.total_seconds() / 3600:.1f}시간 경과 (기준: {MIN_INTERVAL_HOURS}시간). 실행 진행.")
+            log.info("마지막 실행 후 %.1f시간 경과 (기준: %d시간). 실행 진행.",
+                     elapsed.total_seconds() / 3600, MIN_INTERVAL_HOURS)
             return True
-        else:
-            remaining = threshold - elapsed
-            log_message(f"마지막 실행 후 {elapsed.total_seconds() / 3600:.1f}시간 경과. 아직 {remaining.total_seconds() / 3600:.1f}시간 남았습니다. 스킵합니다.")
-            return False
+        remaining = threshold - elapsed
+        log.info("마지막 실행 후 %.1f시간 경과. 아직 %.1f시간 남았습니다. 스킵합니다.",
+                 elapsed.total_seconds() / 3600, remaining.total_seconds() / 3600)
+        return False
     except Exception as e:
-        log_message(f"[WARN] 이전 실행 기록 파싱 오류 ({e}). 안전을 위해 실행합니다.")
+        log.warning("이전 실행 기록 파싱 오류 (%s). 안전을 위해 실행합니다.", e)
         return True
 
 
@@ -78,92 +105,76 @@ def update_last_run():
 def auto_git_sync():
     """크롤링 및 빌드 결과물이 변경되었을 경우 GitHub에 자동 커밋 & 푸시"""
     try:
-        # 변경 사항 여부 확인 (git status --porcelain)
-        status_res = subprocess.run(
-            ["git", "status", "--porcelain"],
-            cwd=str(BASE_DIR),
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace"
-        )
-        changed_files = [line.strip() for line in status_res.stdout.splitlines() if line.strip()]
-        
-        # logs/ 나 임시 파일 제외하고 실제 데이터/사이트 파일 변경이 있는지 검사
-        meaningful_changes = [
-            f for f in changed_files 
-            if not f.endswith(".log") and not f.endswith(".txt") and "logs/" not in f
-        ]
+        # 1. git add — 먼저 스테이징한 뒤, 실제로 커밋될 대상 기준으로 변경 여부를 판단한다
+        #    (logs/ 는 .gitignore 로 이미 제외되므로 별도 필터가 필요 없다)
+        _run(["git", "add", "."], check=True)
 
-        if not meaningful_changes:
-            log_message("[GIT] 새로 추가된 아티클이나 사이트 변경 사항이 없어 푸시를 건너뜁니다.")
+        staged = _run(["git", "diff", "--cached", "--name-only"], check=True)
+        staged_files = [line for line in staged.stdout.splitlines() if line.strip()]
+
+        if not staged_files:
+            log.info("[GIT] 새로 추가된 아티클이나 사이트 변경 사항이 없어 푸시를 건너뜁니다.")
             return
 
-        log_message(f"[GIT] 감지된 변경 파일 {len(meaningful_changes)}개. GitHub 자동 동기화를 시작합니다...")
-
-        # 1. git add
-        subprocess.run(["git", "add", "."], cwd=str(BASE_DIR), check=True)
+        log.info("[GIT] 커밋 대상 파일 %d개. GitHub 자동 동기화를 시작합니다...", len(staged_files))
 
         # 2. git commit
         today_str = datetime.now().strftime("%Y-%m-%d %H:%M")
         commit_msg = f"auto: 신규 아티클 크롤링 및 사이트 자동 업데이트 ({today_str})"
-        subprocess.run(["git", "commit", "-m", commit_msg], cwd=str(BASE_DIR), check=True)
-        log_message(f"[GIT] 커밋 완료: '{commit_msg}'")
+        _run(["git", "commit", "-m", commit_msg], check=True)
+        log.info("[GIT] 커밋 완료: '%s'", commit_msg)
 
         # 3. git push
-        push_res = subprocess.run(
-            ["git", "push", "origin", "public:main"],
-            cwd=str(BASE_DIR),
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace"
-        )
+        push_res = _run(["git", "push", "origin", "public:main"])
         if push_res.returncode == 0:
-            log_message("[GIT SUCCESS] GitHub(main 브랜치)에 자동 업로드 완료!")
+            log.info("[GIT] GitHub(main 브랜치)에 자동 업로드 완료!")
         else:
-            log_message(f"[GIT ERROR] GitHub 푸시 실패:\n{push_res.stderr}")
+            log.error("[GIT] GitHub 푸시 실패 (종료 코드 %d):\n%s",
+                      push_res.returncode, push_res.stderr.rstrip())
 
-    except Exception as e:
-        log_message(f"[GIT EXCEPTION] 자동 Git 동기화 중 오류 발생: {e}")
+    except Exception:
+        # 스택 트레이스까지 함께 기록
+        log.exception("[GIT] 자동 Git 동기화 중 오류 발생")
 
 
 def main():
-    log_message("=== PC 시작 자동 크롤링 가드 실행 ===")
-
-    # 네트워크 대기 (부팅 직후 인터넷 연결 안정화 대기)
-    log_message("인터넷 연결 안정화를 위해 10초 대기...")
-    time.sleep(10)
+    setup_logging()
+    log.info("=== PC 시작 자동 크롤링 가드 실행 ===")
 
     if not should_run():
-        log_message("실행 요건 미충족으로 작업을 마칩니다.")
+        log.info("실행 요건 미충족으로 작업을 마칩니다.")
         return
+
+    # 네트워크 대기 (부팅 직후 인터넷 연결 안정화 대기) — 실제로 실행할 때만 기다린다
+    log.info("인터넷 연결 안정화를 위해 10초 대기...")
+    time.sleep(10)
 
     pipeline_script = BASE_DIR / "scripts" / "url_monitor_pipeline.py"
     if not pipeline_script.exists():
-        log_message(f"[ERROR] 파이프라인 스크립트를 찾을 수 없음: {pipeline_script}")
+        log.error("파이프라인 스크립트를 찾을 수 없음: %s", pipeline_script)
         sys.exit(1)
 
-    log_message(f"크롤링 파이프라인 시작: {pipeline_script}")
+    log.info("크롤링 파이프라인 시작: %s", pipeline_script)
     try:
         cmd = [sys.executable, str(pipeline_script), "--check-latest"]
-        res = subprocess.run(cmd, cwd=str(BASE_DIR), capture_output=True, text=True, encoding="utf-8", errors="replace")
+        res = _run(cmd)
 
-        if res.stdout:
-            print(res.stdout)
-            with open(LOG_FILE, "a", encoding="utf-8") as f:
-                f.write(res.stdout + "\n")
+        if res.stdout.strip():
+            log.info("[pipeline stdout]\n%s", res.stdout.rstrip())
+        if res.stderr.strip():
+            # 성공(0)이어도 경고성 stderr 가 있을 수 있으므로 항상 남긴다
+            log.warning("[pipeline stderr]\n%s", res.stderr.rstrip())
 
         if res.returncode == 0:
             update_last_run()
-            log_message("[SUCCESS] 크롤링 파이프라인 성공 완료. 마지막 실행 시각 갱신됨.")
-            
+            log.info("크롤링 파이프라인 성공 완료. 마지막 실행 시각 갱신됨.")
+
             # 신규 글이 있을 때 GitHub에 자동 커밋 & 푸시
             auto_git_sync()
         else:
-            log_message(f"[ERROR] 파이프라인 실행 중 오류 발생 (종료 코드 {res.returncode}):\n{res.stderr}")
-    except Exception as e:
-        log_message(f"[EXCEPTION] 실행 실패: {e}")
+            log.error("파이프라인 실행 중 오류 발생 (종료 코드 %d)", res.returncode)
+    except Exception:
+        log.exception("파이프라인 실행 실패")
 
 
 if __name__ == "__main__":
