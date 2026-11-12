@@ -215,6 +215,31 @@ def classify_category(title: str, text: str) -> str:
     }
     return max(scores, key=scores.get)
 
+def url_slug(url: str) -> str:
+    """글 URL 의 /p/ 뒤 slug (소문자). /p/ 가 없으면 빈 문자열."""
+    if "/p/" not in (url or ""):
+        return ""
+    return url.rsplit("/p/", 1)[-1].split("?")[0].split("#")[0].strip("/").lower()
+
+
+def dedup_rank(filename: str, stem: str, date_str: str, source_url: str, size: int) -> tuple:
+    """같은 글의 요약 파일이 여럿일 때 대표를 고르는 기준 (클수록 우선).
+
+    1) 파일명이 `YYYY-MM-DD_<URL slug>_summary.md` 규칙인 것 (fetch_archive_md 방식, 표준 10개 섹션)
+    2) 옛 `NNN_` 번호 접두어가 없는 것
+    3) 파일명 날짜와 요약의 발행일이 같은 것
+    4) 용량이 큰 것
+    파일은 지우지 않는다 — 카탈로그에서만 하나로 합친다.
+    """
+    m = re.search(r"(\d{4}-\d{2}-\d{2})_", filename)
+    return (
+        stem.lower() == url_slug(source_url),
+        not re.match(r"^\d+_", filename),
+        bool(m) and m.group(1) == date_str,
+        size,
+    )
+
+
 def build_catalog():
     os.makedirs(DOCS_DIR, exist_ok=True)
     os.makedirs(DOCS_SUMMARIES_DIR, exist_ok=True)
@@ -293,8 +318,31 @@ def build_catalog():
                 "chars": char_count,
                 "words": word_count,
                 "read_time_min": read_time_min
-            }
+            },
+            "_rank": dedup_rank(filename, slug, date_str, source_url, char_count),
         })
+
+    # 같은 글(source_url 의 slug 가 같은 것)의 중복 요약은 대표 하나만 남긴다. 원본 파일은 그대로 둔다.
+    groups = {}
+    for e in catalog:
+        groups.setdefault(url_slug(e["source_url"]) or f"__nourl__{e['id']}", []).append(e)
+    deduped, dropped = [], []
+    for members in groups.values():
+        members.sort(key=lambda e: e["_rank"], reverse=True)
+        deduped.append(members[0])
+        dropped.extend(members[1:])
+    for e in deduped:
+        e.pop("_rank", None)
+    catalog = deduped
+    if dropped:
+        print(f"[중복 제거] 같은 글의 요약 {len(dropped)}건을 카탈로그에서 제외했습니다 (파일은 유지).")
+
+    # 카운트는 중복 제거 후 기준으로 다시 센다
+    category_counts, tag_counts = {}, {}
+    for e in catalog:
+        category_counts[e["category"]] = category_counts.get(e["category"], 0) + 1
+        for t in e["tags"]:
+            tag_counts[t] = tag_counts.get(t, 0) + 1
 
     # 최신순 정렬 (Date DESC)
     catalog.sort(key=lambda x: (x["date"], x["id"]), reverse=True)
