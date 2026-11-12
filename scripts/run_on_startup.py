@@ -108,6 +108,24 @@ def update_last_run():
     LAST_RUN_FILE.write_text(datetime.now().isoformat(), encoding="utf-8")
 
 
+def send_pending_email():
+    """pending.json 의 미발송 항목을 메일로 보낸다. 실패해도 이후 단계(git 동기화)는 막지 않는다."""
+    script = BASE_DIR / "scripts" / "send_email.py"
+    if not script.exists():
+        log.warning("send_email.py 를 찾을 수 없어 메일 발송을 건너뜁니다: %s", script)
+        return
+    try:
+        res = _run([sys.executable, str(script)])
+        if res.stdout.strip():
+            log.info("[MAIL stdout]\n%s", res.stdout.rstrip())
+        if res.returncode == 0:
+            log.info("[MAIL] 메일 발송 단계 완료")
+        else:
+            log.error("[MAIL] 메일 발송 실패 (종료 코드 %d)\n%s", res.returncode, res.stderr.rstrip())
+    except Exception:
+        log.exception("[MAIL] 메일 발송 중 오류 발생")
+
+
 def auto_git_sync():
     """크롤링 및 빌드 결과물이 변경되었을 경우 GitHub에 자동 커밋 & 푸시"""
     try:
@@ -174,6 +192,9 @@ def main():
         if res.returncode == 0:
             update_last_run()
             log.info("크롤링 파이프라인 성공 완료. 마지막 실행 시각 갱신됨.")
+
+            # 신규 글 알림 메일 발송 (pending.json 갱신분이 커밋에 함께 들어가도록 git 동기화보다 먼저)
+            send_pending_email()
 
             # 신규 글이 있을 때 GitHub에 자동 커밋 & 푸시
             auto_git_sync()

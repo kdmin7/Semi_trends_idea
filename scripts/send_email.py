@@ -210,6 +210,26 @@ def main():
         print(f"[Error] pending.json 파싱 실패: {e}", file=sys.stderr)
         return 1
 
+    # 이미 발송한 URL(sent.json)과 큐 안의 중복 URL은 제외한다.
+    # url_monitor_pipeline.py 는 pending.json 에 항목을 덧붙이기만 하므로, 정리하지 않으면 중복 발송된다.
+    try:
+        already_sent = set(json.loads(sent_path.read_text(encoding="utf-8"))) if sent_path.exists() else set()
+    except Exception as e:
+        print(f"[Error] sent.json 파싱 실패: {e}", file=sys.stderr)
+        return 1
+    seen_urls = set()
+    fresh_items = []
+    for it in pending_items:
+        u = it.get("url")
+        if not u or u in already_sent or u in seen_urls:
+            continue
+        seen_urls.add(u)
+        fresh_items.append(it)
+    if len(fresh_items) != len(pending_items):
+        print(f"[Info] 이미 발송했거나 중복인 {len(pending_items) - len(fresh_items)}건을 대기열에서 제외했습니다.")
+        pending_path.write_text(json.dumps(fresh_items, ensure_ascii=False, indent=2), encoding="utf-8")
+    pending_items = fresh_items
+
     if not pending_items:
         print("[Info] 발송할 미발송 항목이 없습니다.")
         return
