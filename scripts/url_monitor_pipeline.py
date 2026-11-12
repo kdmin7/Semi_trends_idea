@@ -76,6 +76,10 @@ SENT_FILE = BASE_DIR / "data" / "state" / "sent.json"
 CATALOG_FILE = BASE_DIR / "docs" / "index.json"
 
 
+# slug -> Substack 아카이브 API 의 post_date (fetch_latest_links 가 채운다)
+ARCHIVE_POST_DATES: dict = {}
+
+
 def slug_of(url: str) -> str:
     """글 URL에서 slug(/p/ 뒤 경로)만 뽑는다. 끝 슬래시·쿼리·대소문자 차이를 무시하기 위함."""
     path = url.split("?", 1)[0].split("#", 1)[0].rstrip("/")
@@ -134,12 +138,18 @@ def fetch_latest_links(site_url: str, firecrawl_key: str, limit: int = 25) -> li
         req = urllib.request.Request(archive_url, headers=headers)
         with urllib.request.urlopen(req, timeout=15) as resp:
             data = json.loads(resp.read().decode("utf-8"))
-            for item in data:
-                canonical = item.get("canonical_url")
-                if canonical:
-                    links.append(canonical)
-                elif item.get("slug"):
-                    links.append(f"{site_url.rstrip('/')}/p/{item['slug']}")
+            # 응답 형태가 {"posts": [...]} 또는 [...] 둘 다 올 수 있다
+            posts = data.get("posts", []) if isinstance(data, dict) else data
+            for item in posts:
+                link = item.get("canonical_url") or (
+                    f"{site_url.rstrip('/')}/p/{item['slug']}" if item.get("slug") else None
+                )
+                if not link:
+                    continue
+                links.append(link)
+                if item.get("post_date"):
+                    # 실제 발행일 — Firecrawl 메타데이터에 publishedTime 이 없을 때 파일명 날짜로 쓴다
+                    ARCHIVE_POST_DATES[slug_of(link)] = item["post_date"]
     except Exception as e:
         print(f"[!] Substack archive API check failed: {e}", file=sys.stderr)
 
@@ -312,8 +322,14 @@ def process_target_url(target_url: str, firecrawl_key: str, gemini_client, syste
         print(f"    [X] 원문 스크랩 실패: {target_url}")
         return False
 
+    metadata = metadata or {}
     title = metadata.get("title") or "Untitled"
-    pub_time = metadata.get("publishedTime") or datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    # 발행일 우선순위: Substack 아카이브 post_date > Firecrawl publishedTime > 오늘(최후 수단)
+    pub_time = (
+        ARCHIVE_POST_DATES.get(slug_of(target_url))
+        or metadata.get("publishedTime")
+        or datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    )
     date_str = pub_time[:10] if len(pub_time) >= 10 else datetime.now(timezone.utc).strftime("%Y-%m-%d")
     year_str = date_str[:4]
 
