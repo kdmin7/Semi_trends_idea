@@ -6029,13 +6029,13 @@ window.POSTS = [
   },
   {
     "title": "Kimi K3: The Manos, The Mythos, The Legendos",
-    "summary": "배경: Moonshot AI의 오픈 프론티어 모델 Kimi K3의 독특한 모델 아키텍처(KDA, Block AttnRes, LatentMoE)와 시스템 서빙 특성을 분석함.\n핵심 팩트: 선형 어텐션(KDA)과 MLA를 3:1 비율로 혼합 적용하고, 깊이 방향 어텐션(Attention Residuals)과 통신 병목을 낮춘 LatentMoE 설계를 도입함.\n영향도: 어텐션 복잡도를 선형화하여 장문맥 처리 효율을 높였으나, 에이전트 워크로드(Append-prefill) 및 프리픽스 캐싱(Prefix caching)에서 서빙 엔지니어링의 신규 병목이 발생함.\n단서: B200 1개 노드에는 전체 가중치가 수용되지 않아 파이프라인 병렬화(PP)가 강제되며, B300 1노드에서도 동시 요청(Concurrency) 8 초과 시 KV 캐시 스래싱(Hit rate ＜ 10%)이 발생함.",
+    "summary": "핵심 아키텍처: Moonshot AI의 Kimi K3는 선형 어텐션(KDA), 깊이 방향 어텐션(Attention Residuals), 압축 MoE(LatentMoE)를 결합한 하이브리드 구조임.\nKDA 도입: 기존 Softmax 어텐션의 $O(L^2)$ 복잡도를 $O(L)$로 개선한 Kimi Delta Attention(KDA)을 통해 긴 문맥 처리 효율을 극대화함.\n추론 최적화: MLA(Multi-head Latent Attention)의 KV 캐시 압축 한계를 KDA와의 3:1 하이브리드 구성으로 보완하여 에이전트 워크로드(Append-Prefill) 대응력을 높임.\n시스템 시사점: 모델 깊이(Depth)와 통신(Communication) 효율을 위해 블록 단위 어텐션과 잠재 공간(Latent) MoE를 활용, 하드웨어 대역폭 한계를 아키텍처 수준에서 해결하려 함.",
     "url": "https://newsletter.semianalysis.com/p/kimi-k3-the-manos-the-mythos-the",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
     "slug": "kimi-k3-the-manos-the-mythos-the",
     "paywalled": true,
-    "published_at": "2026-10-10T00:00:00.000Z",
+    "published_at": "2026-11-12T00:00:00.000Z",
     "title_ko": "문샷 AI Kimi K3 모델 아키텍처와 추론 성능",
     "category": "model",
     "takeaway": "문샷 AI Kimi K3 모델 아키텍처의 혁신과 추론 연산 특성",
@@ -6047,7 +6047,7 @@ window.POSTS = [
     "entities": [
       "Moonshot AI"
     ],
-    "feed_summary": "문샷 AI(Moonshot AI)의 Kimi K3 모델 아키텍처와 추론 성능에 관한 기술 분석입니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "feed_summary": "# [SemiAnalysis 분석] Kimi K3: The Manos, The Mythos, The Legendos\n\n| 항목 | 내용 |\n|---|---|\n| 발행일 | 2026년 8월 3일 (원문 표기 기준, frontmatter는 11월 12일로 혼재) |\n| 출처 | SemiAnalysis |\n| 저자 | Kimbo Chen, Shubham Choudhari, Bryan Shan, Dylan Patel |\n| 수집 범위 | 유료 미리보기(일부) (InferenceX 벤치마크 상세 및 결론부 일부 누락) |\n| 정리 관점 | ",
     "has_detail": true
   },
   {

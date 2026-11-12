@@ -3553,8 +3553,8 @@
     ]
   },
   {
-    "title": "Kimi K3, The Manos, The Mythos, The Legendos",
-    "summary": "문샷 AI(Moonshot AI)의 Kimi K3 모델 아키텍처와 추론 성능에 관한 기술 분석입니다. (상세 본문은 유료 구독 필요, 원문 확인 필요)",
+    "title": "Kimi K3: The Manos, The Mythos, The Legendos",
+    "summary": "# [SemiAnalysis 분석] Kimi K3: The Manos, The Mythos, The Legendos\n\n| 항목 | 내용 |\n|---|---|\n| 발행일 | 2026년 8월 3일 (원문 표기 기준, frontmatter는 11월 12일로 혼재) |\n| 출처 | SemiAnalysis |\n| 저자 | Kimbo Chen, Shubham Choudhari, Bryan Shan, Dylan Patel |\n| 수집 범위 | 유료 미리보기(일부) (InferenceX 벤치마크 상세 및 결론부 일부 누락) |\n| 정리 관점 | ",
     "url": "https://newsletter.semianalysis.com/p/kimi-k3-the-manos-the-mythos-the",
     "source": "https://semianalysis.com/",
     "detected_at": "2026-09-28T14:51:55.839102+00:00",
