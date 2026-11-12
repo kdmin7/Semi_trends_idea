@@ -24,6 +24,7 @@ import sys
 import time
 import datetime
 import urllib.error
+import urllib.parse
 import urllib.request
 
 import storage  # 저장 위치(Drive + 로컬) 한곳 관리
@@ -36,7 +37,7 @@ if sys.platform == "win32":
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent.parent
 SITE = "https://newsletter.semianalysis.com"
-ARCHIVE_API = SITE + "/api/v1/archive?sort=new&limit={limit}&offset={offset}"
+ARCHIVE_API = SITE + "/api/v1/archive?sort=new&limit={limit}"  # 다음 쪽은 &cursor=<nextCursor> (offset 은 400 으로 거부됨)
 FIRECRAWL_API = "https://api.firecrawl.dev/v2/scrape"
 PAGE = 25  # archive API 는 한 번에 최대 25건만 돌려준다. 이보다 크게 잡고 offset 을 그만큼 넘기면 중간 글이 빠진다(50이면 314/341건만 보였음)
 UA = "Mozilla/5.0 (url-monitor archive fetcher)"
@@ -68,15 +69,25 @@ def http_json(url, data=None, headers=None, timeout=60):
 
 
 def list_posts(max_posts=None):
-    """archive API를 빈 응답이 나올 때까지 넘기며 전체 목록(최신순)을 모은다."""
-    posts, offset = [], 0
+    """archive API를 nextCursor 가 없어질 때까지 넘기며 전체 목록(최신순)을 모은다.
+
+    응답은 {"posts": [...], "nextCursor": "..."} 이다 (예전 리스트 응답이면 한 쪽만 받는다).
+    """
+    posts, seen_ids, cursor = [], set(), None
     while True:
-        batch = http_json(ARCHIVE_API.format(limit=PAGE, offset=offset))
+        url = ARCHIVE_API.format(limit=PAGE)
+        if cursor:
+            url += "&cursor=" + urllib.parse.quote(cursor)
+        data = http_json(url)
+        batch = data.get("posts", []) if isinstance(data, dict) else data
         if not batch:
             break
-        posts.extend(batch)
-        offset += PAGE
-        if max_posts and len(posts) >= max_posts:
+        for p in batch:
+            if p.get("id") not in seen_ids:  # 쪽 사이 중복 방지
+                seen_ids.add(p.get("id"))
+                posts.append(p)
+        cursor = data.get("nextCursor") if isinstance(data, dict) else None
+        if not cursor or (max_posts and len(posts) >= max_posts):
             break
         time.sleep(0.5)
     return posts[:max_posts] if max_posts else posts
