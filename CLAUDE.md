@@ -3,10 +3,15 @@
 SemiAnalysis(Substack) 새 글을 매일 수집·요약해 메일로 보내고, 정적 대시보드(`index.html`)로 보여주는 프로젝트.
 자세한 배경은 `README.md`, 사이트 명세는 `SITE_SPEC.md`, 변경 이력은 `change.md`.
 
-## 파이프라인 (`run_daily.py`, 매일 자동 실행)
-`monitor.py`(수집) → `scripts/fetch_archive_md.py --days 14`(원문 md 수집, Firecrawl 글당 약 1크레딧, **실패해도 계속**) → `scripts/backfill_summaries.py`(요약 보강) → `scripts/dedup.py` → `scripts/build_dashboard.py` → `build_site.py`(사이트 빌드) → `scripts/pending.py` → `scripts/send_email.py`(Resend 발송)
+## 파이프라인 (`scripts/run_on_startup.py`, PC 부팅·로그온 시 자동 실행)
+`run_startup.bat`(`run_startup_silent.vbs`) → `scripts/run_on_startup.py`: 마지막 실행 후 4시간(`MIN_INTERVAL_HOURS`) 미만이면 스킵, 아니면 10초 대기 후 아래를 순서대로 실행한다. 로그는 표준 `logging`으로 `logs/startup_run.log`에 남는다.
+1. `scripts/url_monitor_pipeline.py --check-latest`: Substack 아카이브 API + Firecrawl **v2** map으로 최신 링크 탐색 → `data/pipeline_history.json`에 없는 글만 Firecrawl v2 scrape → Gemini 요약 → 원문·요약 md를 로컬+Drive에 저장 → `docs/pending.json`에 추가 → `output/results.json` 갱신 → 카탈로그(`docs/index.json`)·사이트(`assets/data.js`, `docs/`) 재빌드.
+2. `scripts/send_email.py`: `pending.json`에서 `data/state/sent.json`에 있거나 중복인 URL을 빼고 Resend로 발송(실패해도 3번은 진행).
+3. 변경이 있으면 `git add .` → 커밋 → `git push origin public:main` 자동 실행.
 
-**`run_daily.py`는 인자를 처리하지 않는다.** `--help`를 붙여도 메일 발송까지 전체가 실행되므로 테스트 용도로 실행하지 말 것. 확인은 개별 스크립트나 문법 검사(`python -c "import ast; ast.parse(open(f, encoding='utf-8').read())"`)로 한다.
+**`run_on_startup.py`는 테스트 용도로 실행하지 말 것.** 인자를 처리하지 않아 크롤링(크레딧 소모)·메일 발송·`git push`까지 전체가 실행된다. 확인은 개별 스크립트나 문법 검사(`python -c "import ast; ast.parse(open(f, encoding='utf-8').read())"`)로 한다.
+
+**레거시(사용 안 함):** `archive/legacy_scripts/`의 `run_daily.py`·`monitor.py`와 그 흐름에 속한 `scripts/dedup.py`·`build_dashboard.py`·`pending.py`, 산출물 `data/items/*.jsonl`·`docs/items.json`(2026-11-01 이후 갱신되지 않음). 특히 `pending.py`는 낡은 `items.json`으로 `pending.json`을 덮어써 미발송 항목을 지우므로 쓰지 않는다. `fetch_archive_md.py`(과거 글 원문 일괄 수집)·`backfill_summaries.py`는 필요할 때 수동으로 쓴다.
 
 ## 사이트
 - **루트 `index.html`이 원본**이다. 수정 후 `python build_site.py`로 `assets/data.js`를 재생성하고 HTML·`assets/`를 `docs/`(GitHub Pages)로 복사한다. `docs/` 안의 파일은 직접 수정하지 않는다(덮어써짐).
@@ -23,7 +28,7 @@ SemiAnalysis(Substack) 새 글을 매일 수집·요약해 메일로 보내고, 
 - 쓰는 곳은 `fetch_archive_md.py`(원문), `batch_summarize.py`·`url_monitor_pipeline.py`(원문·요약)이고, 읽는 곳은 `build_data.py`(사이트 빌드)·`build_catalog.py`·`compare_summaries.py`다. 경로를 새로 하드코딩하지 말고 `storage`를 쓴다.
 - 새 원문 md는 `storage.raw_dir`(원문 전용 Drive 폴더, 평평하게)에 `YYYY-MM-DD_slug.md`(예: `2026-10-15_asml-is-building-a-hybrid-bonding.md`)로 저장하고, 비어 있거나 연결 안 됐으면 위 Drive 연도 폴더로 폴백한다(로컬 사본은 항상 유지). 번호 접두어(`NNN_`)는 2026-10-27에 모두 제거했고 쓰지 않는다(옛 접두어 이름도 같은 글로 인식). 이미 저장한 글은 날짜+slug(`raw_key_exists`) 또는 옛 이름(`YYYY-MM-DD_제목.md`)으로 판별해 다시 받지 않는다.
 - 원문 전용 폴더에는 같은 이름 형식의 기존 카탈로그 메모 파일(약 2KB)이 있어 이름으로 원문과 구분되지 않는다. 그래서 이 폴더는 저장 대상으로만 쓰고, 원문 입력(`storage.raw_files`)은 로컬 사본을 읽는다. 폴더의 `README.md` 색인은 자동 갱신되지 않는다.
-- 한쪽에만 있는 파일은 `python scripts/sync_to_gdrive.py [--dry-run]`로 맞춘다(추가만 하고 지우거나 덮어쓰지 않는다). `run_daily.py`는 원문 md 수집만 하고 Gemini 요약(`batch_summarize.py`)·동기화는 수동이다.
+- 한쪽에만 있는 파일은 `python scripts/sync_to_gdrive.py [--dry-run]`로 맞춘다(추가만 하고 지우거나 덮어쓰지 않는다). 신규 글은 `url_monitor_pipeline.py`가 원문 수집·Gemini 요약·Drive 백업을 자동으로 하고, 과거 글의 일괄 요약(`batch_summarize.py`)·동기화는 수동이다.
 
 ## 요약 작성·저장 (수동)
 - 형식은 `semianalysis_summary_prompt.md`(10개 섹션)가 기준이다. 자동 경로(Gemini 한도, Anthropic 키 없음)가 막혀 있으면 원문 md를 읽고 직접 쓴다.
