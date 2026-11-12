@@ -14,6 +14,7 @@ PC 부팅(로그온) 시 자동 실행되는 모니터링 가드 스크립트.
 """
 
 import logging
+import os
 import sys
 import subprocess
 import pathlib
@@ -35,11 +36,16 @@ MIN_INTERVAL_HOURS = 4  # 최소 실행 간격 (시간 단위)
 log = logging.getLogger("run_on_startup")
 
 
+# 하위 Python 프로세스가 cp949 가 아닌 UTF-8 로 출력하도록 강제한다 (로그 한글 깨짐 방지)
+CHILD_ENV = dict(os.environ, PYTHONIOENCODING="utf-8", PYTHONUTF8="1")
+
+
 def _run(cmd, **kwargs):
     """BASE_DIR 에서 실행하고 stdout/stderr 를 UTF-8 텍스트로 캡처한다."""
     return subprocess.run(
         cmd,
         cwd=str(BASE_DIR),
+        env=CHILD_ENV,
         capture_output=True,
         text=True,
         encoding="utf-8",
