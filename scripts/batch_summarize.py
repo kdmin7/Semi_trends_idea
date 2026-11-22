@@ -24,6 +24,7 @@ from google import genai
 from google.genai import types
 
 import storage  # 원문·요약 저장 위치(Drive + 로컬) 한곳 관리
+import summary_prompt  # 요약 프롬프트 로딩·수집 범위 판정
 
 # Windows cp949 콘솔 인코딩 에러 방지
 if sys.platform == "win32":
@@ -86,7 +87,7 @@ def load_env_api_key():
     return ""
 
 def load_system_prompt():
-    return PROMPT_FILE.read_text(encoding="utf-8")
+    return summary_prompt.load_system_prompt(PROMPT_FILE)
 
 def main():
     parser = argparse.ArgumentParser(description="SemiAnalysis batch summarizer")
@@ -145,6 +146,7 @@ def main():
         prompt = f"""다음 SemiAnalysis 게시물 원본 전문을 읽고 시스템 지침(작성 규칙 및 10대 출력 형식)에 따라 정확한 읽기 노트를 작성하라.
 
 [입력 파일명]: {file_path.name}
+{summary_prompt.scope_line(content)}
 
 --- 원문 내용 ---
 {content}

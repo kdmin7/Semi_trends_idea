@@ -29,6 +29,7 @@ from google import genai
 from google.genai import types
 
 import storage  # 원문·요약 저장 위치(Drive + 로컬) 한곳 관리
+import summary_prompt  # 요약 프롬프트 로딩·수집 범위 판정
 
 # 윈도우 UTF-8 입출력 보정
 if sys.platform == "win32":
@@ -193,25 +194,30 @@ def generate_summary(client, original_content: str, filename: str, system_prompt
     user_prompt = f"""다음 웹사이트 게시물 전문을 읽고 시스템 지침(작성 규칙 및 10대 출력 형식)에 따라 정확한 읽기 노트를 작성하라.
 
 [입력 파일명]: {filename}
+{summary_prompt.scope_line(original_content)}
 
 --- 원문 내용 ---
 {original_content}
 """
     # gemini-3.8-flash 우선 호출
     models_to_try = ["gemini-3.8-flash", "gemini-3-flash-preview"]
+    max_attempts = 3  # 모델별 시도 횟수 (일시적 503/504 흡수)
     for model_name in models_to_try:
-        try:
-            res = client.models.generate_content(
-                model=model_name,
-                contents=user_prompt,
-                config=config,
-            )
-            text = res.text.strip()
-            if text:
-                return text
-        except Exception as e:
-            print(f"    [!] Summary generation error with {model_name}: {e}", file=sys.stderr)
-            time.sleep(2)
+        for attempt in range(1, max_attempts + 1):
+            try:
+                res = client.models.generate_content(
+                    model=model_name,
+                    contents=user_prompt,
+                    config=config,
+                )
+                text = (res.text or "").strip()
+                if text:
+                    return text
+                print(f"    [!] {model_name}: 빈 응답 ({attempt}/{max_attempts})", file=sys.stderr)
+            except Exception as e:
+                print(f"    [!] Summary generation error with {model_name} ({attempt}/{max_attempts}): {e}", file=sys.stderr)
+            if attempt < max_attempts:
+                time.sleep(5 * attempt)  # 5초, 10초 점증 대기
     return ""
 
 def sync_to_google_drive(raw_path: pathlib.Path, summary_path: pathlib.Path, year_str: str):
@@ -345,11 +351,15 @@ def process_target_url(target_url: str, firecrawl_key: str, gemini_client, syste
     raw_path = RAW_DIR / raw_filename
     summary_path = SUMMARY_DIR / summary_filename
 
+    # 수집 범위 판정용: 메타데이터에 audience가 있으면 frontmatter에 남긴다 (없으면 paywall 문구로 판정)
+    audience = (metadata or {}).get("audience")
+    audience_line = f"\naudience: {audience}" if isinstance(audience, str) and audience else ""
+
     frontmatter = f"""---
 title: "{title}"
 date: {date_str}
 source: {target_url}
-scraped_at: {datetime.now(timezone.utc).isoformat()}
+scraped_at: {datetime.now(timezone.utc).isoformat()}{audience_line}
 ---
 
 """
@@ -398,7 +408,7 @@ def main():
         print("ERROR: FIRECRAWL_API_KEY or GEMINI_API_KEY missing in .env", file=sys.stderr)
         sys.exit(1)
 
-    system_prompt = PROMPT_FILE.read_text(encoding="utf-8")
+    system_prompt = summary_prompt.load_system_prompt(PROMPT_FILE)
     gemini_client = genai.Client(api_key=gemini_key, http_options=types.HttpOptions(timeout=90000))
     history = load_history()
 
