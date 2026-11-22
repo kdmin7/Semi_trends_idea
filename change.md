@@ -467,3 +467,41 @@
 - 카탈로그 362건과 아카이브 348건의 차이 14건, 아카이브에 없는 카탈로그 항목 30건 확인.
 - 파일명 규칙 불일치: 파이프라인이 제목형 이름으로 저장(`storage`의 `YYYY-MM-DD_slug.md` 규칙과 다름). `url_monitor_pipeline.py`가 `RAW_DIR`/`SUMMARY_DIR`을 직접 지정.
 - 로그 로테이션(`RotatingFileHandler`), Pyright 경고 정리(`reconfigure`, 안 쓰는 import), README의 파이프라인 설명 갱신.
+
+## 2026-11-22 — 요약 프롬프트 보강, Gemini 재시도, 파이프라인 중복·비효율 정리
+
+### 1. Gemini 요약 재시도 (`575ec50`)
+- 배경: 11-21 실행에서 `gemini-3.8-flash`가 504 DEADLINE_EXCEEDED, 이전에도 503 UNAVAILABLE 발생. 모델별 1회만 시도해 두 모델 모두 실패하면 그 글은 요약 없이 남음.
+- `generate_summary`: 모델별 최대 3회 시도(5초·10초 점증 대기), 빈 응답(`res.text`가 `None`/공백)도 재시도. 로그에 `(시도/3)` 표시.
+
+### 2. 시스템 프롬프트 로딩·수집 범위 판정 (`575ec50`)
+- 새 파일 `scripts/summary_prompt.py`(pipeline·`batch_summarize.py` 공용).
+- `load_system_prompt()`: `semianalysis_summary_prompt.md`의 첫 `---`~마지막 `---` 사이만 사용. 전에는 파일 전체(앞 안내문·"운영 메모")가 Gemini에 들어갔음.
+- `scope_line()`: frontmatter `content`/`audience`와 "This post is for paid subscribers" 문구로 수집 범위를 판정해 입력 앞에 `[수집 범위]: ...` 한 줄로 붙임(운영 메모의 권고 반영). 로컬 원문 375건 판정: 유료 미리보기 281, 전문 94, 확인 필요 0(frontmatter 값과 일치, 필드 없는 32건은 paywall 문구로 판정).
+- 파이프라인이 새로 저장하는 원문 frontmatter에 메타데이터 `audience`가 있으면 기록.
+
+### 3. 요약 프롬프트에 engineer-analyst v1.0 최소 반영 (`575ec50`)
+- `engineer_analyst_v1_0.md`(엔지니어 출신 애널리스트 문체)와 비교 후, 10개 섹션 구조·개조식·"필자 판단" 라벨은 유지하고 5가지만 덧붙임. 사이트 빌드(`build_data.py`, `build_catalog.py`)가 `Executive Summary`/`Key Insights`/`Conclusion` 제목·불릿과 `필자 판단:` 라벨을 파싱하므로 구조는 바꾸지 않음.
+  1. 역할: 기술 병목(전력·열·수율·대역폭·면적·리드타임) → P·Q·마진·CAPEX·점유율 연결
+  2. 규칙 A-3: 수치의 비교 기준(QoQ·YoY·컨센서스·경쟁사)과 출처, 업체 발표 vs 검증값, 기술적 가능 vs 양산·원가상 가능 구분
+  3. 규칙 D-12(신설): 평가형 형용사·번역투·해설형 연결어·맺음 상투구 금지
+  4. 출력 1번 첫 줄은 판단 한 줄, 7번 마지막 불릿은 "판단을 바꿀 조건"
+  5. 검산(C-8)에 재무 연결·단위/기준 누락·금지 어휘 점검 3개 추가
+- 반영하지 않은 것: 산문 문체, 분량 15~20%, 4단 요약 구조, 투자의견 조건부 허용, 작성 모드. 기존 요약은 그대로이고 새 요약부터 적용.
+- `engineer_analyst_v1_0.md`는 커밋하지 않고 로컬에만 둠.
+
+### 4. 파이프라인 중복·비효율 정리 (`4113477`)
+- 요약 실패로 남은 원문 재사용: `find_existing_raw()`가 로컬 원문의 `source:` slug로 같은 글을 찾으면 Firecrawl 재스크랩 없이 요약만 다시 시도(크레딧 절약). 375건 탐색 약 0.5초.
+- 카탈로그·사이트 재빌드를 글마다 하지 않고 `process_urls()`에서 처리 후 한 번만(새로 완료된 글이 있을 때). `history` 저장은 글마다 유지.
+- 사용자 프롬프트(`build_user_prompt`)·모델 목록(`MODELS`)·생성 설정(`make_config`)을 `summary_prompt.py`로 공용화. `batch_summarize.py`의 대체 모델이 `gemini-3.7-flash` → `gemini-3-flash-preview`로 통일됨. 배치의 `response.text` `None` 오류도 막음.
+- slug 계산을 `slug_of()`로 통일, `results.json`의 `paywalled`를 원문 기준(`is_paywalled`)으로 판정(기존 349건과 불일치 0건 확인).
+- 프롬프트 규칙 6: 입력에 `[수집 범위]` 줄이 있으면 그 값을 우선 사용.
+- 미사용 import 제거(`os`, `shutil`, `urllib.error`, 배치의 `glob`, `traceback`), docstring 현행화.
+
+### 5. 검증·배포
+- 문법 검사와 새 함수 오프라인 테스트만 함. Firecrawl·Gemini 실호출, 파이프라인 전체 실행은 하지 않음.
+- `public` → `origin/main` 푸시(`7e2c222..4113477`). 푸시 전 diff에 키 패턴 없음, `config/`·`.env`·`mcp_config.json` 변경 없음 확인.
+
+### 남은 할 일
+- 다음 자동 실행 로그에서 재시도 표시 `(1/3)`과 "전체 완료! N건" 줄 확인, 새 규칙이 적용된 첫 요약이 사이트에서 정상 파싱되는지 확인.
+- Pyright 경고: `summary_prompt` import 미해결(실행에는 문제 없음, `storage`와 같은 방식), `reconfigure` 경고.
