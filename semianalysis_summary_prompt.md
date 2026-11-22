@@ -25,7 +25,7 @@
 5. 저자 또는 매체의 이해관계(데이터·모델 유료 판매, 대상 기업의 지원·검증 등)가 원문에 드러나면 한계 섹션에 적는다.
 
 ### B. 수집 상태
-6. frontmatter의 `audience`, `content` 값과 본문 끝의 paywall 문구로 수집 범위를 판단한다.
+6. 입력에 `[수집 범위]` 줄이 있으면 그 값을 그대로 쓴다. 없을 때만 frontmatter의 `audience`, `content` 값과 본문 끝의 paywall 문구로 아래와 같이 판단한다.
    - 전문이면 `전문`
    - `paid-preview`이거나 "This post is for paid subscribers" 문구가 있으면 `유료 미리보기(일부)`
    - 판단이 불확실하면 `확인 필요`

@@ -12,6 +12,33 @@ PROMPT_FILE = BASE_DIR / "semianalysis_summary_prompt.md"
 
 PAYWALL_MARKERS = ("This post is for paid subscribers",)
 
+# 요약 모델: 앞에서부터 시도 (pipeline·batch_summarize 공용)
+MODELS = ["gemini-3.8-flash", "gemini-3-flash-preview"]
+THINKING_BUDGET = 2048
+TEMPERATURE = 0.2
+
+
+def make_config(system_prompt: str):
+    """Gemini 요약 호출 설정 (google-genai)."""
+    from google.genai import types
+    return types.GenerateContentConfig(
+        system_instruction=system_prompt,
+        thinking_config=types.ThinkingConfig(thinking_budget=THINKING_BUDGET),
+        temperature=TEMPERATURE,
+    )
+
+
+def build_user_prompt(filename: str, content: str) -> str:
+    """요약 요청 사용자 프롬프트: 파일명 + 코드가 판정한 수집 범위 + 원문."""
+    return f"""다음 SemiAnalysis 게시물 원문을 읽고 시스템 지침(작성 규칙 및 10대 출력 형식)에 따라 정확한 읽기 노트를 작성하라.
+
+[입력 파일명]: {filename}
+{scope_line(content)}
+
+--- 원문 내용 ---
+{content}
+"""
+
 
 def load_system_prompt(path: pathlib.Path = PROMPT_FILE) -> str:
     """프롬프트 파일에서 첫 번째 `---` 줄과 마지막 `---` 줄 사이(시스템 프롬프트 본문)만 반환한다.
@@ -27,7 +54,7 @@ def load_system_prompt(path: pathlib.Path = PROMPT_FILE) -> str:
     return "\n".join(lines[seps[0] + 1:seps[-1]]).strip()
 
 
-def _frontmatter(text: str) -> dict:
+def frontmatter(text: str) -> dict:
     m = re.match(r"^---\s*\n(.*?)\n---\s*\n", text, re.S)
     if not m:
         return {}
@@ -41,7 +68,7 @@ def _frontmatter(text: str) -> dict:
 
 def collection_scope(text: str) -> str:
     """원문 md(frontmatter 포함)에서 수집 범위를 판정한다: 전문 / 유료 미리보기(일부) / 확인 필요."""
-    fm = _frontmatter(text)
+    fm = frontmatter(text)
     content = fm.get("content", "")
     audience = fm.get("audience", "")
     if content == "paid-preview" or audience == "only_paid" or any(m in text for m in PAYWALL_MARKERS):
@@ -54,3 +81,8 @@ def collection_scope(text: str) -> str:
 def scope_line(text: str) -> str:
     """입력 앞에 붙일 수집 범위 안내 한 줄."""
     return f"[수집 범위]: {collection_scope(text)} (frontmatter·paywall 문구로 코드가 판정한 값)"
+
+
+def is_paywalled(text: str) -> bool:
+    """사이트·results.json 의 paywalled 플래그: 전문이 아니면 True."""
+    return collection_scope(text) != "전문"

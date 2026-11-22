@@ -13,10 +13,8 @@ Gemini 3.8 Flash 모델로 고품질 요약 노트를 생성하고 output/semian
 import os
 import sys
 import time
-import glob
 import pathlib
 import collections
-import traceback
 import argparse
 import json
 import datetime
@@ -37,8 +35,7 @@ SUMMARY_DIR = SEMI_DIR / "summary"
 PROMPT_FILE = BASE_DIR / "semianalysis_summary_prompt.md"
 ENV_FILE = BASE_DIR / ".env"
 
-PRIMARY_MODEL = "gemini-3.8-flash"
-FALLBACK_MODEL = "gemini-3.7-flash"
+# 모델 목록·생성 설정은 summary_prompt.MODELS / make_config 에서 공용 관리
 
 # 유료 티어(Pay-as-you-go) 고속 처리 설정 (1,000 RPM / 4M TPM 대비 넉넉하고 안전한 속도)
 SAFE_MAX_RPM = 60
@@ -124,11 +121,7 @@ def main():
 
     rate_limiter = StrictRateLimiter(max_rpm=SAFE_MAX_RPM, max_tpm=SAFE_MAX_TPM)
 
-    config = types.GenerateContentConfig(
-        system_instruction=system_instruction,
-        thinking_config=types.ThinkingConfig(thinking_budget=2048),
-        temperature=0.2,
-    )
+    config = summary_prompt.make_config(system_instruction)
 
     for idx, file_path in enumerate(all_files, 1):
         target_name = f"{file_path.stem}_summary.md"
@@ -143,17 +136,10 @@ def main():
         est_tokens = int(len(content) / 3.5) + 3500
         print(f"[{idx}/{total_count}] Processing: {file_path.name} (추정 토큰: {est_tokens:,}) ...", flush=True)
 
-        prompt = f"""다음 SemiAnalysis 게시물 원본 전문을 읽고 시스템 지침(작성 규칙 및 10대 출력 형식)에 따라 정확한 읽기 노트를 작성하라.
-
-[입력 파일명]: {file_path.name}
-{summary_prompt.scope_line(content)}
-
---- 원문 내용 ---
-{content}
-"""
+        prompt = summary_prompt.build_user_prompt(file_path.name, content)
 
         success = False
-        models_to_try = [PRIMARY_MODEL, FALLBACK_MODEL]
+        models_to_try = summary_prompt.MODELS
 
         for model_candidate in models_to_try:
             if success:
@@ -168,7 +154,7 @@ def main():
                         contents=prompt,
                         config=config,
                     )
-                    summary_text = response.text.strip()
+                    summary_text = (response.text or "").strip()
                     if summary_text:
                         storage.save_summary(target_name, summary_text, overwrite=True)  # Drive + 로컬
                         print(f"    -> Saved ({len(summary_text)} chars) via {model_candidate} to {target_name}", flush=True)

@@ -5,25 +5,23 @@ scripts/url_monitor_pipeline.py
 SemiAnalysis 신규 아티클 실시간 모니터링 & 자동화 파이프라인.
 
 기능:
-1. Firecrawl API를 통해 최신 게시물 링크 탐색 (--check-latest 또는 수동 URL 지정)
-2. data/pipeline_history.json 대조로 신규 항목만 선별 (중복 처리 방지)
-3. Firecrawl로 원문 마크다운 스크랩
-4. Gemini 3.8 Flash (Thinking Budget 2048) 모델로 10대 항목 심층 요약 노트 자동 작성
-5. 원문 및 요약본 로컬 저장 (output/semianalysis/)
-6. Google Drive (G:\\내 드라이브\\SemiAnalysis) 연도별 & 요약 통합 폴더로 자동 백업
-7. docs/index.json 및 docs/summaries/ 웹 대시보드 색인 카탈로그 실시간 자동 재빌드
-8. 이메일 발송 대기열(docs/pending.json) 연동
+1. 최신 게시물 링크 탐색: Substack 아카이브 API (실패 시 Firecrawl v2 map 대체)
+   (--check-latest 또는 인자로 URL 직접 지정)
+2. 신규 판정: pipeline_history.json + 카탈로그(docs/index.json)·발송 기록·대기열의 slug 대조
+3. Firecrawl v2 scrape로 원문 마크다운 수집 (로컬에 같은 글 원문이 있으면 재사용, 크레딧 절약)
+4. Gemini 요약 (모델·설정·프롬프트는 summary_prompt.py, 규칙은 semianalysis_summary_prompt.md)
+5. 원문·요약을 로컬 output/semianalysis/ 에 저장하고 Drive로 복사 (경로 규칙은 storage.py)
+6. 이메일 발송 대기열(docs/pending.json)·output/results.json 갱신
+7. 모든 글 처리 후 카탈로그(docs/index.json)·사이트(build_site.py) 한 번 재빌드
 """
 
-import os
 import sys
 import re
 import json
 import time
-import shutil
 import pathlib
+import subprocess
 import urllib.request
-import urllib.error
 from datetime import datetime, timezone
 from google import genai
 from google.genai import types
@@ -184,25 +182,32 @@ def firecrawl_scrape(url: str, api_key: str):
         print(f"[!] Firecrawl scrape error for {url}: {e}", file=sys.stderr)
         return None, None
 
+def find_existing_raw(target_url: str):
+    """같은 글(slug 기준)의 원문 md가 로컬에 이미 있으면 (경로, 내용)을 반환. 없으면 (None, None).
+
+    요약 실패로 history에 등록되지 않은 글을 다음 실행에서 다시 스크랩하지 않기 위함.
+    """
+    want = slug_of(target_url)
+    if not RAW_DIR.exists():
+        return None, None
+    for path in RAW_DIR.glob("*.md"):
+        try:
+            with path.open(encoding="utf-8") as f:
+                head = f.read(1000)
+        except Exception:
+            continue
+        m = re.search(r"^source:\s*(\S+)", head, re.M)
+        if m and slug_of(m.group(1)) == want:
+            return path, path.read_text(encoding="utf-8")
+    return None, None
+
+
 def generate_summary(client, original_content: str, filename: str, system_prompt: str) -> str:
-    """Gemini 3.8 Flash 모델로 고품질 요약 노트를 작성합니다."""
-    config = types.GenerateContentConfig(
-        system_instruction=system_prompt,
-        thinking_config=types.ThinkingConfig(thinking_budget=2048),
-        temperature=0.2,
-    )
-    user_prompt = f"""다음 웹사이트 게시물 전문을 읽고 시스템 지침(작성 규칙 및 10대 출력 형식)에 따라 정확한 읽기 노트를 작성하라.
-
-[입력 파일명]: {filename}
-{summary_prompt.scope_line(original_content)}
-
---- 원문 내용 ---
-{original_content}
-"""
-    # gemini-3.8-flash 우선 호출
-    models_to_try = ["gemini-3.8-flash", "gemini-3-flash-preview"]
+    """Gemini로 요약 노트를 작성합니다 (모델 순서·설정은 summary_prompt.py)."""
+    config = summary_prompt.make_config(system_prompt)
+    user_prompt = summary_prompt.build_user_prompt(filename, original_content)
     max_attempts = 3  # 모델별 시도 횟수 (일시적 503/504 흡수)
-    for model_name in models_to_try:
+    for model_name in summary_prompt.MODELS:
         for attempt in range(1, max_attempts + 1):
             try:
                 res = client.models.generate_content(
@@ -245,7 +250,6 @@ def trigger_catalog_rebuild():
         # build_site.py 실행하여 index.html 및 assets/data.js 동기화
         build_site_script = BASE_DIR / "build_site.py"
         if build_site_script.exists():
-            import subprocess
             subprocess.run([sys.executable, str(build_site_script)], cwd=str(BASE_DIR), check=True)
             print("    [*] index.html 및 assets/data.js 동기화 완료.")
     except Exception as e:
@@ -273,7 +277,7 @@ def append_to_pending(title: str, summary: str, url: str):
     except Exception as e:
         print(f"    [!] Pending queue error: {e}", file=sys.stderr)
 
-def update_results_json(title: str, summary: str, url: str, slug: str, pub_time: str, metadata: dict):
+def update_results_json(title: str, summary: str, url: str, slug: str, pub_time: str, paywalled: bool):
     """output/results.json에 신규 아티클 정보를 등록하여 웹 대시보드(index.html)에서 즉시 반영되도록 연동"""
     results_file = BASE_DIR / "output" / "results.json"
     results = []
@@ -284,8 +288,7 @@ def update_results_json(title: str, summary: str, url: str, slug: str, pub_time:
             results = []
 
     # slug 또는 url 기준 기존 항목 검색
-    existing = next((r for r in results if r.get("slug") == slug or r.get("url") == url), None)
-    paywalled = ("유료" in (summary or "")[:200]) or (metadata.get("audience") != "everyone")
+    existing = next((r for r in results if slug_of(r.get("slug") or r.get("url") or "") == slug or r.get("url") == url), None)
 
     if existing:
         existing["title"] = title
@@ -321,41 +324,42 @@ def process_target_url(target_url: str, firecrawl_key: str, gemini_client, syste
     print(f"[*] 신규 아티클 감지: {target_url}")
     print(f"========================================================")
 
-    # 1. Firecrawl 스크랩
-    print("    1. Firecrawl로 원문 스크랩 중...")
-    markdown, metadata = firecrawl_scrape(target_url, firecrawl_key)
-    if not markdown:
-        print(f"    [X] 원문 스크랩 실패: {target_url}")
-        return False
-
-    metadata = metadata or {}
-    title = metadata.get("title") or "Untitled"
-    # 발행일 우선순위: Substack 아카이브 post_date > Firecrawl publishedTime > 오늘(최후 수단)
-    pub_time = (
-        ARCHIVE_POST_DATES.get(slug_of(target_url))
-        or metadata.get("publishedTime")
-        or datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    )
-    date_str = pub_time[:10] if len(pub_time) >= 10 else datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    year_str = date_str[:4]
-
-    clean_title_str = sanitize_filename(title)
-    base_stem = f"{date_str}_{clean_title_str}"
-    raw_filename = f"{base_stem}.md"
-    summary_filename = f"{base_stem}_summary.md"
-
-    # 2. 로컬 디렉토리 저장
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     SUMMARY_DIR.mkdir(parents=True, exist_ok=True)
+    slug = slug_of(target_url)
 
-    raw_path = RAW_DIR / raw_filename
-    summary_path = SUMMARY_DIR / summary_filename
+    # 1. 원문 확보: 이전 실행에서 저장한 원문이 있으면 재사용(요약만 실패했던 경우), 없으면 Firecrawl 스크랩
+    raw_path, raw_content = find_existing_raw(target_url)
+    if raw_path is not None:
+        fm = summary_prompt.frontmatter(raw_content)
+        title = fm.get("title") or "Untitled"
+        pub_time = ARCHIVE_POST_DATES.get(slug) or fm.get("date") or raw_path.name[:10]
+        raw_filename = raw_path.name
+        print(f"    1~2. 기존 원문 재사용 (스크랩 생략): {raw_filename}")
+    else:
+        print("    1. Firecrawl로 원문 스크랩 중...")
+        markdown, metadata = firecrawl_scrape(target_url, firecrawl_key)
+        if not markdown:
+            print(f"    [X] 원문 스크랩 실패: {target_url}")
+            return False
 
-    # 수집 범위 판정용: 메타데이터에 audience가 있으면 frontmatter에 남긴다 (없으면 paywall 문구로 판정)
-    audience = (metadata or {}).get("audience")
-    audience_line = f"\naudience: {audience}" if isinstance(audience, str) and audience else ""
+        metadata = metadata or {}
+        title = metadata.get("title") or "Untitled"
+        # 발행일 우선순위: Substack 아카이브 post_date > Firecrawl publishedTime > 오늘(최후 수단)
+        pub_time = (
+            ARCHIVE_POST_DATES.get(slug)
+            or metadata.get("publishedTime")
+            or datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        )
+        date_str = pub_time[:10] if len(pub_time) >= 10 else datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        raw_filename = f"{date_str}_{sanitize_filename(title)}.md"
+        raw_path = RAW_DIR / raw_filename
 
-    frontmatter = f"""---
+        # 수집 범위 판정용: 메타데이터에 audience가 있으면 frontmatter에 남긴다 (없으면 paywall 문구로 판정)
+        audience = metadata.get("audience")
+        audience_line = f"\naudience: {audience}" if isinstance(audience, str) and audience else ""
+
+        frontmatter = f"""---
 title: "{title}"
 date: {date_str}
 source: {target_url}
@@ -363,12 +367,16 @@ scraped_at: {datetime.now(timezone.utc).isoformat()}{audience_line}
 ---
 
 """
-    raw_content = frontmatter + markdown
-    raw_path.write_text(raw_content, encoding="utf-8")
-    print(f"    2. 원문 마크다운 저장 완료: {raw_filename} ({len(raw_content):,} bytes)")
+        raw_content = frontmatter + markdown
+        raw_path.write_text(raw_content, encoding="utf-8")
+        print(f"    2. 원문 마크다운 저장 완료: {raw_filename} ({len(raw_content):,} bytes)")
 
-    # 3. Gemini 3.8 Flash 요약 생성
-    print("    3. Gemini 3.8 Flash 심층 요약 노트 작성 중 (Thinking Budget: 2048)...")
+    year_str = raw_filename[:4]
+    summary_filename = f"{raw_path.stem}_summary.md"
+    summary_path = SUMMARY_DIR / summary_filename
+
+    # 3. Gemini 요약 생성
+    print("    3. Gemini 심층 요약 노트 작성 중...")
     summary_text = generate_summary(gemini_client, raw_content, raw_filename, system_prompt)
     if not summary_text:
         print(f"    [X] 요약 생성 실패: {raw_filename}")
@@ -389,15 +397,24 @@ scraped_at: {datetime.now(timezone.utc).isoformat()}{audience_line}
     # 6. 이메일 대기열 추가
     append_to_pending(title, summary_text, target_url)
 
-    # 7. 웹 대시보드 원본(results.json) 등록 및 index.html 자동 반영
-    slug = target_url.rstrip("/").split("/")[-1]
-    update_results_json(title, summary_text, target_url, slug, pub_time, metadata)
+    # 7. 웹 대시보드 원본(results.json) 등록 (카탈로그·사이트 재빌드는 main에서 한 번)
+    update_results_json(title, summary_text, target_url, slug, pub_time,
+                        summary_prompt.is_paywalled(raw_content))
 
-    # 8. 웹 대시보드 색인 카탈로그 및 index.html 자동 갱신
-    trigger_catalog_rebuild()
-
-    print(f"    [★] 파이프라인 전체 완료! 웹 게시판 및 Google Drive에 반영되었습니다.")
+    print(f"    [★] 아티클 처리 완료: {slug}")
     return True
+
+
+def process_urls(urls, firecrawl_key, gemini_client, system_prompt, history):
+    """URL 목록을 차례로 처리하고, 하나라도 성공하면 카탈로그·사이트를 한 번 재빌드한다."""
+    before = len(history)
+    for url in urls:
+        process_target_url(url, firecrawl_key, gemini_client, system_prompt, history)
+        time.sleep(2)
+    done = len(history) - before  # 이번에 새로 완료(history 등록)된 글 수
+    if done:
+        trigger_catalog_rebuild()
+        print(f"[★] 파이프라인 전체 완료! {done}건이 웹 게시판 및 Google Drive에 반영되었습니다.")
 
 def main():
     env = load_env()
@@ -431,16 +448,11 @@ def main():
             return
 
         print(f"[*] 발견된 신규 아티클: {len(new_links)}건")
-        for link in new_links:
-            process_target_url(link, firecrawl_key, gemini_client, system_prompt, history)
-            time.sleep(2)
+        process_urls(new_links, firecrawl_key, gemini_client, system_prompt, history)
         return
 
     # 옵션 2: 수동 지정 URL 처리
-    for url in args:
-        if url.startswith("http"):
-            process_target_url(url, firecrawl_key, gemini_client, system_prompt, history)
-            time.sleep(2)
+    process_urls([u for u in args if u.startswith("http")], firecrawl_key, gemini_client, system_prompt, history)
 
 if __name__ == "__main__":
     main()
