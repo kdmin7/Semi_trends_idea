@@ -1,5 +1,15 @@
 [
   {
+    "title": "Evaluating Recent Model Releases on GDPx",
+    "summary": "# [SemiAnalysis 분석] Evaluating Recent Model Releases on GDPx\n\n| 항목 | 내용 |\n|---|---|\n| 발행일 | 2026-11-26 |\n| 출처 | SemiAnalysis |\n| 저자 | Max Kan, Andrew Megalaa, Adam Holter, Dylan Patel |\n| 수집 범위 | 유료 미리보기(일부) (본문 하단 paywall 존재로 인해 상세 도메인별 분석 일부 누락 가능성 있음) |\n| 정리 관점 | 반도체·전자·컴퓨팅 시스템 실무자의 읽기 노트 |\n\n> 읽는",
+    "url": "https://newsletter.semianalysis.com/p/evaluating-recent-model-releases",
+    "source": "https://newsletter.semianalysis.com",
+    "detected_at": "2026-11-26T14:21:32.884406+00:00",
+    "slug": "evaluating-recent-model-releases",
+    "paywalled": true,
+    "published_at": "2026-11-26T00:05:35.537Z"
+  },
+  {
     "title": "Nvidia and the World Without Jensen",
     "summary": "# [SemiAnalysis 분석] Nvidia and the World Without Jensen\n\n| 항목 | 내용 |\n|---|---|\n| 발행일 | 2026년 11월 12일 |\n| 출처 | SemiAnalysis (Substack) |\n| 저자 | Dylan Patel, Doug, Wayne Ma, Jordan Nanos |\n| 수집 범위 | 유료 미리보기(일부) - Jensen 사임 배경과 공급망 영향 위주, 사임 후 Nvidia의 구체적 모습 섹션부터 유료 제한 |\n| 정리 관점 | 반도체·전자·컴퓨팅 시스템 실무자의 읽",
     "url": "https://newsletter.semianalysis.com/p/nvidia-and-the-world-without-jensen",
